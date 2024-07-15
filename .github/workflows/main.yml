@@ -1,42 +1,50 @@
-name: Python CI
+name: NuName Discord Bot CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
+        python-version: [3.9.0]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macOS-latest'
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
-
-      - name: Set up Python on Windows
-        if: matrix.os == 'windows-latest'
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-          architecture: 'x64'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
+      - name: Run tests (if applicable)
         run: |
-          python -m pytest
+          # Add commands to run your tests if applicable
+          # For example:
+          # pytest tests/
 
+      - name: Run bot
+        run: |
+          python bot.py
+
+      - name: Install Python on macOS
+        run: brew install python@3.9
+
+      - name: Run macOS tests
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
