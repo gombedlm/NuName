@@ -1,51 +1,68 @@
 # NuName Discord Bot
 
-## Windows
+## Table of Contents
+- [Setup](#setup)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+  - [Clone the Repository](#clone-the-repository)
+- [Running the Bot](#running-the-bot)
+  - [Locally on Windows](#locally-on-windows)
+  - [Locally on Linux](#locally-on-linux)
+- [Running in the Background](#running-in-the-background)
+  - [Using Task Scheduler on Windows](#using-task-scheduler-on-windows)
+  - [Using Systemd on Linux](#using-systemd-on-linux)
+- [Adding the Bot to Your Server](#adding-the-bot-to-your-server)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Non Dedicated Installation
-If you dont want to setup a dedicated server to run this script constantly do this instead
+## Setup
 
-1. Install the repository to your computer -  
-to do this first make sure you have git installed { https://git-scm.com/download/win } open powershell or command prompt and run the following command.
+### Dependencies
+**> WARNING: Python 3.9 SPECIFICALLY IS REQUIRED**
+ Make sure you have python 3.9 EXACTLY. Ensure its installed before running the command if you have another python installation then you need to uninstall it or ensure you run it with pyhton 3.9 or you will end up with an installation that does not work properly.
+
+ > Im also using the packages discord.py for the bot integration. as well as python-dotenv for the bots security, so we arent giving out any bot tokens to anyone.
+
+### Clone the repository
+Open the command line (Linux & Windows) or Powershell (Windows Only) and run the following commands: 
+
+Get a copy of the repository
 ```bash
-git clone https://github.com/your-username/NuName-Discord-Bot.git
+git clone https://github.com/gombedlm/NuName.git
 ```
 
-2. Install Dependencies - 
-first navigate to the repository that holds your requirements
-```bash
-cd NuName-Discord-Bot
-```
+### Installation
+With that same command line open run the following commands: 
 
-then install the dependencies from the requirements.txt using pip
+1. Install the requirements from the requirements.txt
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Setup Environment Variables - 
-Next set up environment variables by opening the .env file and replacing the environment variable with your bot Token
-
-
-
-use the discord developer portal to create a bot for your server that will use the bot.py script. to do this put your token that is generated from the discord developer portal in the enviormental variable below 
-
+2. Ensure that the following dependencies were installed.
 ```bash
-DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
+discord.py
+python-dotenv
 ```
-if you get stuck here are some walkthrough instructions with pictures to setup and create the bot and aqquire your token: https://www.writebots.com/discord-bot-token/
+
+### Environment Variables
+ When you finish the installation section, there will be a file in your root folder called '.env' that contains an line of code, shown below.
+```bash
+DISCORD_TOKEN=your-bot-token
+```
+1. Here you will need to replace the placeholder text with your actual bot token that you can find in your discord developer dashboard here when you create the bot for the server using the following (its super easy took me like 5 minutes) ---> https://discord.com/login?redirect_to=%2Fdevelopers
+
+ > if you get stuck heres a step by step guide to getting your bot token with pictures :3 ---> https://www.writebots.com/discord-bot-token/
 
 
+## Running the bot Locally
+So if you dont feel like setting up an entire server or just dont have one, you dont need to.
+### Windows
+If you completed the installation and Enviormental Variable setup steps above, run your bot.py.
 
-4. Run the script - 
-Finally run the bot.py script and check all console readouts and ensure that all dependencies are installed from step 3
+### Linux
 
-
-
-### Dedicated Server Installation
-
-
-## Linux
-
-### Non Dedicated Installation
-
-### Dedicated Server Installation
+## Running the bot on a dedicated server
+### Windows
+### Linux
