@@ -10,8 +10,7 @@ Welcome to NuName Discord Bot, a bot that assigns nicknames to new members joini
 If you dont want to setup a dedicated server to run this script constantly do this instead
 
 1. Clone the Repository: 
-Open Command Prompt or PowerShell:
-Clone the repository
+Open Command Prompt or PowerShell and run the following command:
 ```bash
 git clone https://github.com/your-username/NuName-Discord-Bot.git
 ```
