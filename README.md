@@ -51,16 +51,16 @@ python-dotenv
 ```bash
 DISCORD_TOKEN=your-bot-token
 ```
-1. Here you will need to replace the placeholder text with your actual bot token that you can find in your discord developer dashboard here when you create the bot for the server using the following (its super easy took me like 5 minutes) ---> https://discord.com/login?redirect_to=%2Fdevelopers
+1. Here you will need to replace the placeholder text with your actual bot token that you can find in your discord developer dashboard here when you create the bot for the server using the following (Just sign in and make a new bot profile) ---> https://discord.com/login?redirect_to=%2Fdevelopers
 
- > if you get stuck heres a step by step guide to getting your bot token with pictures :3 ---> https://www.writebots.com/discord-bot-token/
+ > if you get stuck heres a step by step guide to getting your bot token with pictures :3 https://www.writebots.com/discord-bot-token/
 
 
 ## Running the bot Locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
 ### Windows
-If you completed the installation and Enviormental Variable setup steps above, run your bot.py.
-
+1. If you completed the installation and Enviormental Variable setup steps above, run your bot.py.
+> if you dont mind restarting you bot everytime you restart your server then thats it you can stop there, if you would like it to restart and run with your computer then follow the instructions below 
 ### Linux
 
 ## Running the bot on a dedicated server
