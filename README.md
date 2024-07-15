@@ -10,7 +10,7 @@
 - [License](#license)
 
 # Setup
-## Running the Bot Locally
+## Local Configuration
 
 ### Dependencies
 **> WARNING: Python 3.9 SPECIFICALLY IS REQUIRED**
@@ -61,7 +61,7 @@ Replace the value in the variable below with your bot token.
 DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
 ```
 
-## Running the bot
+### Running the bot locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
 ### Windows
 1. Open command terminal and navigate to the root directory of the bot.
@@ -75,6 +75,49 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
+#### Setup the bot to run automatically
+1. Using Task Scheduler on Windows
+Press Win + R to open the Run dialog.
+Type taskschd.msc and press Enter to open Task Scheduler.
+Click on "Create Task..." on the right-hand side under the "Actions" pane.
+
+
+2. General Tab:
+
+Name your task (e.g., "NuName Discord Bot").
+(Optional) provide a description.
+(Required) Select "Run whether user is logged on or not."
+(Required) Check "Run with highest privileges."
+
+3. Triggers Tab:
+
+Click "New..." to create a new trigger.
+In the "New Trigger" window, select "At startup" from the "Begin the task" dropdown.
+Click "OK."
+
+4. Actions Tab:
+
+Click "New..." to create a new action.
+In the "New Action" window, set the "Action" dropdown to "Start a program."
+In the "Program/script" field, enter the path to your Python executable (e.g., C:\Path\To\Python\python.exe).
+In the "Add arguments (optional)" field, enter the path to your bot script (e.g., C:\Path\To\NuName-Discord-Bot\bot.py).
+
+5. Conditions Tab:
+
+Uncheck "Start the task only if the computer is on AC power" if you want the bot to run on battery power as well (Only for laptops).
+Adjust any other conditions as needed.
+
+6. Settings Tab:
+
+Check "Allow task to be run on demand."
+Check "Run task as soon as possible after a scheduled start is missed."
+Optionally, adjust any other settings according to your preferences.
+
+
+7. Finish:
+
+Click "OK" to create the task.
+You will be prompted to enter your Windows account password to save the task.
 
 ### Linux
 1. Open command terminal and navigate to the root directory of the bot.
@@ -88,8 +131,13 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-## Running the bot on a dedicated server
+## Dedicated Server Configuration
+If you have a server configured or have an extra linux system that can be used to connect your bot use this configuration.
+
 ### Windows
 ### Linux
 
-##
+# Contributing
+Contributions are welcome, this is simply a rough template for the logic of a very simple bot for discord and it still has lots of potential.
+
+# License 
