@@ -1,9 +1,8 @@
 # NuName Discord Bot
-Welcome to NuName Discord Bot, a bot that assigns nicknames to new members joining your Discord server.
 
-### Windows
+## Windows
 
-#### Non Dedicated Installation
+### Non Dedicated Installation
 If you dont want to setup a dedicated server to run this script constantly do this instead
 
 1. Install the repository to your computer -  
@@ -42,11 +41,11 @@ Finally run the bot.py script and check all console readouts and ensure that all
 
 
 
-#### Dedicated Server Installation
+### Dedicated Server Installation
 
 
-### Linux
+## Linux
 
-#### Local Installation
+### Non Dedicated Installation
 
-#### Dedicated Server Installation
+### Dedicated Server Installation
