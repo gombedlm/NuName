@@ -27,9 +27,14 @@
 ### Clone the repository
 Open the command line (Linux & Windows) or Powershell (Windows Only) and run the following commands: 
 
-Get a copy of the repository
+1. Get a copy of the repository
 ```bash
 git clone https://github.com/gombedlm/NuName.git
+```
+
+2. Navigate to the root directory of the repository
+```bash
+cd NuName-Discord-Bot
 ```
 
 ### Installation
@@ -47,21 +52,22 @@ python-dotenv
 ```
 
 ### Environment Variables
- When you finish the installation section, there will be a file in your root folder called '.env' that contains an line of code, shown below.
-```bash
-DISCORD_TOKEN=your-bot-token
-```
-1. Here you will need to replace the placeholder text with your actual bot token that you can find in your discord developer dashboard here when you create the bot for the server using the following (Just sign in and make a new bot profile) ---> https://discord.com/login?redirect_to=%2Fdevelopers
+Once you finish the installation and ensureing that you have the correct dependencies.
 
- > if you get stuck heres a step by step guide to getting your bot token with pictures :3 https://www.writebots.com/discord-bot-token/
+1. You are going to need to get yourself a Discord Bot Token
+Sign in and create a profile for your new bot. ----> https://discord.com/login?redirect_to=%2Fdevelopers%2Fapplications%2F
+> Essentially you just need to create a profile for your bot that you are adding to the server, the script you are installing is its logic to communicate with the server.
 
 
 ## Running the bot Locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
 ### Windows
 1. If you completed the installation and Enviormental Variable setup steps above, run your bot.py.
-> if you dont mind restarting you bot everytime you restart your server then thats it you can stop there, if you would like it to restart and run with your computer then follow the instructions below 
+> if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
+
 ### Linux
+1. If you completed the installation and Enviormental Variable setup steps above, run your bot.py.
+> if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
 ## Running the bot on a dedicated server
 ### Windows
