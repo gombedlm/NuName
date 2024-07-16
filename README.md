@@ -186,35 +186,17 @@ sudo apt-get install python3.9
 sudo apt-get install git
 ```
 
-### (Optional) if step 1 does not work then do this.
-- Download python from source code:
-```bash
-wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
-tar -xf Python-3.9.0.tgz
-cd Python-3.9.0
-```
-Compile and install python from source code:
-```bash
-./configure --enable-optimizations
-make -j$(nproc)
-sudo make altinstall
-```
-verify installation
-```bash
-python3.9 --version
-```
-
-2. Clone the repository:
+4. Clone the repository:
 Connect to your server via ssh or any remote access method and enter the following into the command line.
 ```bash
 git clone https://github.com/gombedlm/NuName.git
 cd NuName
 ```
-3. Install Dependencies:
+5. Install Dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-4. Configure Environmental Variables:
+6. Configure Environmental Variables:
 Ensure that '.env' file is properly configured with the necessary environment variables particularlly 'DISCORD_TOKEN' where you will store your bots token (so no bad actors will hack into your servers bot)
 ```bash
 DISCORD_TOKEN=your_discord_bot_token_here
