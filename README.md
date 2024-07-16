@@ -77,43 +77,42 @@ python bot.py
 
 #### Windows Auto-Start Configuration
 1. Using Task Scheduler on Windows
-Press Win + R to open the Run dialog.
-- Type taskschd.msc and press Enter to open Task Scheduler.
-- Click on "Create Task..." on the right-hand side under the "Actions" pane.
+    Press Win + R to open the Run dialog.
+    - Type taskschd.msc and press Enter to open Task Scheduler.
+    - Click on "Create Task..." on the right-hand side under the "Actions" pane.
 
 
 2. General Tab:
-Name your task (e.g., "NuName Discord Bot").
-- (Optional) provide a description.
-- (Required) Select "Run whether user is logged on or not."
-- (Required) Check "Run with highest privileges."
+    Name your task (e.g., "NuName Discord Bot").
+    - (Optional) provide a description.
+    - (Required) Select "Run whether user is logged on or not."
+    - (Required) Check "Run with highest privileges."
 
 3. Triggers Tab:
-Click "New..." to create a new trigger.
-- In the "New Trigger" window, select "At startup" from the "Begin the task" dropdown.
-- Click "OK."
+    Click "New..." to create a new trigger.
+    - In the "New Trigger" window, select "At startup" from the "Begin the task" dropdown.
+    Click "OK."
 
 4. Actions Tab:
-Click "New..." to create a new action.
-- In the "New Action" window, set the "Action" dropdown to "Start a program."
-- In the "Program/script" field, enter the path to your Python executable (e.g., C:\Path\To\Python\python.exe).
-- In the "Add arguments (optional)" field, enter the path to your bot script (e.g., C:\Path\To\NuName-Discord-Bot\bot.py).
+    Click "New..." to create a new action.
+    - In the "New Action" window, set the "Action" dropdown to "Start a program."
+    - In the "Program/script" field, enter the path to your Python executable (e.g., C:\Path\To\Python\python.exe).
+    - In the "Add arguments (optional)" field, enter the path to your bot script (e.g., C:\Path\To\NuName-Discord-Bot\bot.py).
 
 5. Conditions Tab:
-Adjust any other conditions as needed.
-- Uncheck "Start the task only if the computer is on AC power" if you want the bot to run on battery power as well (Only for laptops).
+    Adjust any other conditions as needed.
+    - Uncheck "Start the task only if the computer is on AC power" if you want the bot to run on battery power as well (Only for laptops).
 
 
 6. Settings Tab:
-- Check "Allow task to be run on demand."
-- Check "Run task as soon as possible after a scheduled start is missed."
+    - Check "Allow task to be run on demand."
+    - Check "Run task as soon as possible after a scheduled start is missed."
 
 
 
 7. Finish:
-
-- Click "OK" to create the task.
-> **You will be prompted to enter your Windows account password to save the task.**
+    - Click "OK" to create the task.
+    > **You will be prompted to enter your Windows account password to save the task.**
 
 #### Linux
 1. Open command terminal and navigate to the root directory of the bot.
