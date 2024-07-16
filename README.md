@@ -175,13 +175,17 @@ sudo systemctl status nuname-discord-bot
 This guide is based on ubutnutu 24.04
 
 1. Prepare the server enviorment 
-make sure that your enviorment is up to date
+    make sure that your enviorment is up to date
 ```bash
 sudo apt update
 ```
-Ensure your server has python 3.9 installed and install packages such as git
+2. Ensure your server has python 3.9 installed
 ```bash
 sudo apt-get install python3.9 
+```
+3. Ensure your server has git installed 
+```bash 
+sudo apt-get install git
 ```
 
 #### (Optional) if step 1 does not work then do this.
@@ -229,6 +233,7 @@ This will start your discord bot on the server that the token is registered to. 
 
 
 # Adding the bot to your server
+
 ### Local Configuration
 1. Generate your invite link:
     - Ensure your bot is running either locally on your machine (either Windows or Linux) or on a dedicated server.
@@ -243,6 +248,7 @@ This will start your discord bot on the server that the token is registered to. 
     - Paste the copied URL into your web browser's address bar and press Enter.
     - Select the server you want to add the bot to from the dropdown list.
     - Click "Authorize" and complete any CAPTCHA prompts if necessary.
+
 ### Dedicated Configuration
 1. Generate Invite Link:
     - Ensure your bot is deployed and running on your dedicated server.
