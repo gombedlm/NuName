@@ -63,7 +63,7 @@ DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
 
 ### Running the bot locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
-#### Windows
+## Running on Windows
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -75,7 +75,7 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-#### Windows Auto-Start Configuration
+### Windows Auto-Start Configuration
 1. Using Task Scheduler on Windows
     Press Win + R to open the Run dialog.
     - Type taskschd.msc and press Enter to open Task Scheduler.
@@ -114,7 +114,7 @@ python bot.py
     - Click "OK" to create the task.
     > **You will be prompted to enter your Windows account password to save the task.**
 
-#### Linux
+## Linux
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -127,7 +127,7 @@ python bot.py
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
 
-#### Linux Auto-Start Configuration
+### Linux Auto-Start Configuration
 1. Create a systemd service file in the /etc/systemd directory:
 ```bash
 sudo nano /etc/systemd/system/nuname-discord-bot.service
