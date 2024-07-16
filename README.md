@@ -114,7 +114,7 @@ python bot.py
     - Click "OK" to create the task.
     > **You will be prompted to enter your Windows account password to save the task.**
 
-## Linux
+## Running on Linux
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -170,8 +170,8 @@ sudo systemctl enable nuname-discord-bot
 sudo systemctl status nuname-discord-bot
 ```
 
-## Linux Dedicated Server Configuration
-If you have a server configured or have an extra linux system that can be used to connect your bot use this configuration.
+## Dedicated Server Guide
+This guide is based on ubutnutu 24.04
 
 1. Prepare the server enviorment 
 make sure that your enviorment is up to date
