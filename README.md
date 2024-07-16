@@ -1,11 +1,12 @@
 # NuName Discord Bot
 
 ## Table of Contents
-- [Setup](#setup)
-- [Running the Bot Locally](#running-the-bot-locally)
-- [Running the bot on a Dedicated Server](running-on-a-dedicated-server)
-- [Running in the Background](#running-in-the-background)
-- [Adding the Bot to Your Server](#adding-the-bot-to-your-server)
+- [Setup](#Setup)
+- [Local Configuration](#LocalConfiguration)
+- [Dedicated Configuration](#DedicatedConfiguration)
+- [Adding your Bot](#adding-the-bot-to-your-server)
+- [Windows Configuration](#WindowsConfiguration)
+- [Linux Configuration](#LinuxConfiguration)
 - [Contributing](#contributing)
 - [License](#license)
 
