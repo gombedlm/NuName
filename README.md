@@ -75,22 +75,20 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-#### Windows Auto-Start Configuration w/ Task Scheduler
+#### Windows Auto-Start Configuration
 1. Using Task Scheduler on Windows
-Press Win + R to open the Run dialog.
-Type taskschd.msc and press Enter to open Task Scheduler.
-Click on "Create Task..." on the right-hand side under the "Actions" pane.
+- Press Win + R to open the Run dialog.
+- Type taskschd.msc and press Enter to open Task Scheduler.
+- Click on "Create Task..." on the right-hand side under the "Actions" pane.
 
 
 2. General Tab:
-
-Name your task (e.g., "NuName Discord Bot").
-(Optional) provide a description.
-(Required) Select "Run whether user is logged on or not."
-(Required) Check "Run with highest privileges."
+- Name your task (e.g., "NuName Discord Bot").
+- (Optional) provide a description.
+- (Required) Select "Run whether user is logged on or not."
+- (Required) Check "Run with highest privileges."
 
 3. Triggers Tab:
-
 Click "New..." to create a new trigger.
 In the "New Trigger" window, select "At startup" from the "Begin the task" dropdown.
 Click "OK."
@@ -132,7 +130,7 @@ python bot.py
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
 
-#### Linux Auto-Start Configuration w/ Systemd
+#### Linux Auto-Start Configuration
 1. Create a systemd service file in the /etc/systemd directory:
 ```bash
 sudo nano /etc/systemd/system/nuname-discord-bot.service
