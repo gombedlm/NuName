@@ -63,7 +63,8 @@ DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
 
 ### Running the bot locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
-## Running on Windows
+
+### Running on Windows
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -75,7 +76,7 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-### Windows Auto-Start Configuration
+#### Windows Auto-Start Configuration
 1. Using Task Scheduler on Windows
     Press Win + R to open the Run dialog.
     - Type taskschd.msc and press Enter to open Task Scheduler.
@@ -114,7 +115,7 @@ python bot.py
     - Click "OK" to create the task.
     > **You will be prompted to enter your Windows account password to save the task.**
 
-## Running on Linux
+### Running on Linux
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -127,7 +128,7 @@ python bot.py
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
 
-### Linux Auto-Start Configuration
+#### Linux Auto-Start Configuration
 1. Create a systemd service file in the /etc/systemd directory:
 ```bash
 sudo nano /etc/systemd/system/nuname-discord-bot.service
@@ -216,7 +217,7 @@ Ensure that '.env' file is properly configured with the necessary environment va
 ```bash
 DISCORD_TOKEN=your_discord_bot_token_here
 ```
-### Running the bot (Dedicated Server)
+### Running the bot on the Dedicated Server
 1. Start the bot
 Run the script in your server enviorment
 ```bash
@@ -225,6 +226,35 @@ python bot.py
 
 2. Ensure connectivity
 This will start your discord bot on the server that the token is registered to. Ensure that you see the log messages indicating the bot is ready - "NuName bot is ready".
+
+
+# Adding the bot to your server
+### Local Configuration
+1. Generate your invite link:
+    - Ensure your bot is running either locally on your machine (either Windows or Linux) or on a dedicated server.
+    - Open your web browser and go to the Discord Developer Portal.
+    - Navigate to your Discord Developer Portal, find your bot app and select the "OAuth2" tab from the left sidebar.
+
+2. OAuth2 Configuration:
+    - In the "OAuth2 URL Generator" section, under "OAuth2 URL Generator," select the scopes needed for your bot (bot for adding as a bot) and the permissions required
+    - Copy the generated URL.
+
+3. Invite to Server:
+    - Paste the copied URL into your web browser's address bar and press Enter.
+    - Select the server you want to add the bot to from the dropdown list.
+    - Click "Authorize" and complete any CAPTCHA prompts if necessary.
+### Dedicated Configuration
+1. Generate Invite Link:
+    - Ensure your bot is deployed and running on your dedicated server.
+    - Follow steps 1 and 2 from the Local Install section to generate an OAuth2 URL with the appropriate permissions.
+
+2. Invite to Server:
+    - Copy the generated OAuth2 URL and paste it into your web browser's address bar.
+    - Choose the server where you want to add the bot and authorize it by clicking "Authorize."
+
+3. Verify:
+After authorization, your bot will join the selected server.
+
 
 # Contributing
 Contributions are welcome! If you find any issues or want to add new features:
