@@ -172,8 +172,6 @@ sudo systemctl status nuname-discord-bot
 ```
 
 ## Dedicated Server Guide
-This guide is based on ubutnutu 24.04
-
 1. Prepare the server enviorment 
     make sure that your enviorment is up to date
 ```bash
@@ -188,8 +186,8 @@ sudo apt-get install python3.9
 sudo apt-get install git
 ```
 
-#### (Optional) if step 1 does not work then do this.
-Download python from source code:
+### (Optional) if step 1 does not work then do this.
+- Download python from source code:
 ```bash
 wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
 tar -xf Python-3.9.0.tgz
