@@ -241,6 +241,7 @@ After authorization, your bot will join the selected server.
 2. Invite to Server:
     - Copy the generated OAuth2 URL and paste it into your web browser's address bar.
     - Choose the server where you want to add the bot and authorize it by clicking "Authorize."
+**WARNING: Make sure you enable, "REQUIRES OAUTH2 CODE GRANT", and all "Privileged Gateway Intents"**
 
 3. Verify:
 After authorization, your bot will join the selected server.
