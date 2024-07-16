@@ -63,7 +63,7 @@ DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
 
 ### Running the bot locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
-### Windows
+#### Windows
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -75,7 +75,7 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-#### Setup the bot to run automatically
+#### Windows Auto-Start Configuration w/ Task Scheduler
 1. Using Task Scheduler on Windows
 Press Win + R to open the Run dialog.
 Type taskschd.msc and press Enter to open Task Scheduler.
@@ -119,7 +119,7 @@ Optionally, adjust any other settings according to your preferences.
 Click "OK" to create the task.
 You will be prompted to enter your Windows account password to save the task.
 
-### Linux
+#### Linux
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -131,13 +131,115 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-## Dedicated Server Configuration
+
+#### Linux Auto-Start Configuration w/ Systemd
+1. Create a systemd service file in the /etc/systemd directory:
+```bash
+sudo nano /etc/systemd/system/nuname-discord-bot.service
+```
+2. Paste the following Configuration into the file:
+```bash
+[Unit]
+Description=NuName-Discord-Bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/path/to/NuName-Discord-Bot
+ExecStart=/usr/bin/python3 /path/to/NuName-Discord-Bot/bot.py
+Restart=on-failure
+User=your_linux_username
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. Replace /path/to/NuName-Discord-Bot, /usr/bin/python3, your_linux_username with your actual paths and username information.
+```bash
+WorkingDirectory=/path/to/NuName-Discord-Bot
+ExecStart=/usr/bin/python3 /path/to/NuName-Discord-Bot/bot.py
+User=your_linux_username
+```
+**WARNING:**Change these only do not alter any other info unless you know what you are changing.
+
+4. Save the file ('Ctl + x' then 'Y', then 'Enter')
+
+5. Start the services and enable it (so it starts on boot)
+```bash
+sudo systemctl start nuname-discord-bot
+sudo systemctl enable nuname-discord-bot
+```
+
+6. Check its status to make sure its not being stupid
+```bash
+sudo systemctl status nuname-discord-bot
+```
+
+## Linux Dedicated Server Configuration
 If you have a server configured or have an extra linux system that can be used to connect your bot use this configuration.
 
-### Windows
-### Linux
+1. Prepare the server enviorment 
+make sure that your enviorment is up to date
+```bash
+sudo apt update
+```
+Ensure your server has python 3.9 installed and install packages such as git
+```bash
+sudo apt-get install python3.9 
+```
+
+#### (Optional) if step 1 does not work then do this.
+Download python from source code:
+```bash
+wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
+tar -xf Python-3.9.0.tgz
+cd Python-3.9.0
+```
+Compile and install python from source code:
+```bash
+./configure --enable-optimizations
+make -j$(nproc)
+sudo make altinstall
+```
+verify installation
+```bash
+python3.9 --version
+```
+
+2. Clone the repository:
+Connect to your server via ssh or any remote access method and enter the following into the command line.
+```bash
+git clone https://github.com/gombedlm/NuName.git
+cd NuName
+```
+3. Install Dependencies:
+```bash
+pip install -r requirements.txt
+```
+4. Configure Environmental Variables:
+Ensure that '.env' file is properly configured with the necessary environment variables particularlly 'DISCORD_TOKEN' where you will store your bots token (so no bad actors will hack into your servers bot)
+```bash
+DISCORD_TOKEN=your_discord_bot_token_here
+```
+### Running the bot (Dedicated Server)
+1. Start the bot
+Run the script in your server enviorment
+```bash
+python bot.py
+```
+
+2. Ensure connectivity
+This will start your discord bot on the server that the token is registered to. Ensure that you see the log messages indicating the bot is ready - "NuName bot is ready".
 
 # Contributing
-Contributions are welcome, this is simply a rough template for the logic of a very simple bot for discord and it still has lots of potential.
+Contributions are welcome! If you find any issues or want to add new features:
+
+1. Fork the repository.
+2. Create a new branch (git checkout -b feature/issue-name).
+3. Make your changes and commit them (git commit -am 'Add new feature').
+4. Push to the branch (git push origin feature/issue-name).
+5. Create a new Pull Request.
+6. Please ensure your code follows the project's coding style and includes necessary tests.
 
 # License 
+**This project is licensed under the MIT License. See the LICENSE file for details.**
