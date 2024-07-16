@@ -12,7 +12,7 @@
 
 # Setup
 
-## Local Configuration
+## Local Setup
 
 ### Dependencies
 **> WARNING: Python 3.9 SPECIFICALLY IS REQUIRED**
@@ -176,7 +176,8 @@ sudo systemctl enable nuname-discord-bot
 sudo systemctl status nuname-discord-bot
 ```
 
-## Dedicated Server Guide
+## Setup on Dedicated Server
+This is a guide for if you already have a dedicated server running youd like to run this on.
 1. Prepare the server enviorment 
     make sure that your enviorment is up to date
 ```bash
@@ -215,7 +216,7 @@ python bot.py
 This will start your discord bot on the server that the token is registered to. Ensure that you see the log messages indicating the bot is ready - "NuName bot is ready".
 
 
-# Adding the bot to your server
+# Adding the bot to your discord server
 
 ### Local Configuration
 1. Generate your invite link:
@@ -234,7 +235,7 @@ This will start your discord bot on the server that the token is registered to. 
 4. Verify:
 After authorization, your bot will join the selected server.
 
-### Dedicated Configuration
+### Dedicated Server Configuration
 1. Generate Invite Link:
     - Ensure your bot is deployed and running on your dedicated server.
     - Follow steps 1 and 2 from the Local Install section to generate an OAuth2 URL with the appropriate permissions.
@@ -252,16 +253,6 @@ After authorization, your bot will join the selected server.
 
 
 
-
-# Contributing
-Contributions are welcome! If you find any issues or want to add new features:
-
-1. Fork the repository.
-2. Create a new branch (git checkout -b feature/issue-name).
-3. Make your changes and commit them (git commit -am 'Add new feature').
-4. Push to the branch (git push origin feature/issue-name).
-5. Create a new Pull Request.
-6. Please ensure your code follows the project's coding style and includes necessary tests.
 
 # License 
 **This project is licensed under the MIT License. See the LICENSE file for details.**
