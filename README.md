@@ -50,7 +50,10 @@ Once you finish the installation and ensureing that you have the correct depende
 
 1. You are going to need to get yourself a Discord Bot Token to make this whole thing work:
 Sign in and create a profile for your new bot. ----> https://discord.com/login?redirect_to=%2Fdevelopers%2Fapplications%2F
+> Go to the Discord Developer Portal and click "New Application" , name it whatever youd like, then click "Bot" on the left hand menu and select your new bot. Then click "Reset Token" and copy the one that pops up, this is your Bot Token.
+
 > Essentially you just need to create a profile for your bot that you are adding to the server, the script you are installing is its logic to communicate with the server.
+
 2. Navigate to the root directory using:
 ```bash
 cd NuName-Discord-Bot
