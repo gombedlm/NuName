@@ -10,6 +10,7 @@
 - [License](#license)
 
 # Setup
+
 ## Local Configuration
 
 ### Dependencies
@@ -201,14 +202,12 @@ Ensure that '.env' file is properly configured with the necessary environment va
 ```bash
 DISCORD_TOKEN=your_discord_bot_token_here
 ```
-### Running the bot on the Dedicated Server
-1. Start the bot
+7. Start the bot
 Run the script in your server enviorment
 ```bash
 python bot.py
 ```
-
-2. Ensure connectivity
+8. Ensure connectivity
 This will start your discord bot on the server that the token is registered to. Ensure that you see the log messages indicating the bot is ready - "NuName bot is ready".
 
 
@@ -228,6 +227,8 @@ This will start your discord bot on the server that the token is registered to. 
     - Paste the copied URL into your web browser's address bar and press Enter.
     - Select the server you want to add the bot to from the dropdown list.
     - Click "Authorize" and complete any CAPTCHA prompts if necessary.
+4. Verify:
+After authorization, your bot will join the selected server.
 
 ### Dedicated Configuration
 1. Generate Invite Link:
@@ -240,6 +241,11 @@ This will start your discord bot on the server that the token is registered to. 
 
 3. Verify:
 After authorization, your bot will join the selected server.
+
+
+
+
+
 
 
 # Contributing
