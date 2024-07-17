@@ -3,45 +3,39 @@ from discord.ext import commands
 import json
 import os
 import logging
-from dotenv import load_dotenv
 import asyncio
+from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 # Configure logging
-logger = logging.getLogger('discord')
-logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.StreamHandler(),
+                        logging.FileHandler('bot.log')
+                    ])
 
-# Create handlers
-console_handler = logging.StreamHandler()
-file_handler = logging.FileHandler('bot.log')
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
+logger = logging.getLogger('discord')
 
 # Define intents
 intents = discord.Intents.default()
 intents.members = True
 
+# Initialize bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Initialize internal data
+# Load user data
 user_data = {"counter": 0, "users": {}}
-
-# Load user data from file
 if os.path.exists('user_data.json'):
     try:
         with open('user_data.json', 'r') as f:
             user_data = json.load(f)
     except (json.JSONDecodeError, FileNotFoundError) as e:
         logger.error(f"Error loading user_data.json: {e}")
-else:
-    logger.info("user_data.json not found, initializing with default values.")
 
-# Save user data to file
+# Save user data
 def save_user_data():
     try:
         with open('user_data.json', 'w') as f:
@@ -52,31 +46,26 @@ def save_user_data():
 # Event: Bot is ready
 @bot.event
 async def on_ready():
-    try:
-        logger.info(f'NuName bot {bot.user} is ready.')
+    logger.info(f'NuName bot {bot.user} is ready.')
+    if not bot.guilds:
+        logger.warning("Bot is not connected to any guilds.")
+        return
 
-        if len(bot.guilds) == 0:
-            logger.warning("Bot is not connected to any guilds.")
-            return
+    guild = bot.guilds[0]
+    existing_numbers = []
 
-        guild = bot.guilds[0]
+    for member in guild.members:
+        if member.nick:
+            try:
+                number = int(member.nick.split(" | ")[0])
+                existing_numbers.append(number)
+            except ValueError:
+                logger.warning(f"Invalid nickname format for {member.name}")
 
-        existing_numbers = []
-        for member in guild.members:
-            if member.nick:
-                try:
-                    number = int(member.nick.split(" | ")[0])
-                    existing_numbers.append(number)
-                except ValueError:
-                    logger.warning(f"Invalid nickname format for {member.name}")
+    if existing_numbers:
+        user_data["counter"] = max(existing_numbers)
 
-        if existing_numbers:
-            user_data["counter"] = max(existing_numbers)
-
-        save_user_data()
-
-    except Exception as e:
-        logger.error(f"Error in on_ready: {e}")
+    save_user_data()
 
 # Event: Member joins the server
 @bot.event
@@ -85,10 +74,10 @@ async def on_member_join(member):
         if member.bot:
             new_nickname = f'BOT | {member.name}'
             await member.edit(nick=new_nickname)
-            logger.info(f'NuName assigned bot nickname {new_nickname} to {member.name}')
+            logger.info(f'Assigned bot nickname {new_nickname} to {member.name}')
             return
 
-        while user_data["counter"] + 1 in user_data["users"].keys():
+        while user_data["counter"] + 1 in user_data["users"]:
             user_data["counter"] += 1
 
         user_data["counter"] += 1
@@ -97,7 +86,7 @@ async def on_member_join(member):
 
         new_nickname = f'{user_data["counter"]:03} | {member.name}'
         await member.edit(nick=new_nickname)
-        logger.info(f'NuName assigned nickname {new_nickname} to {member.name}')
+        logger.info(f'Assigned nickname {new_nickname} to {member.name}')
 
         await member.send(f"Welcome to the server, {member.name}! Your ID-like nickname is now: {new_nickname}")
 
@@ -109,18 +98,15 @@ async def on_member_join(member):
 # Event: Member leaves the server
 @bot.event
 async def on_member_remove(member):
-    try:
-        logger.info(f'{member.name} has left the server.')
-    except Exception as e:
-        logger.error(f"Error in on_member_remove: {e}")
+    logger.info(f'{member.name} has left the server.')
 
 # Event: Member nickname update
 @bot.event
 async def on_member_update(before, after):
     try:
-        if before.nick != after.nick and after.nick != user_data["users"].get(str(after.id), None):
+        if before.nick != after.nick and after.nick != user_data["users"].get(str(after.id)):
             await after.edit(nick=user_data["users"][str(after.id)])
-            logger.info(f'NuName reverted nickname change for {after.name}')
+            logger.info(f'Reverted nickname change for {after.name}')
     except discord.Forbidden:
         logger.error(f"Permission error: Cannot change nickname for {after.name}")
     except KeyError:
@@ -128,19 +114,46 @@ async def on_member_update(before, after):
     except Exception as e:
         logger.error(f"Error in on_member_update: {e}")
 
-# Get the Discord token from environment variables
-TOKEN = os.getenv('DISCORD_TOKEN')
-if TOKEN:
+# Slash command to list available commands
+@bot.tree.command(name="NuName-Commands", description="List all commands currently available")
+async def slash_command(interaction: discord.Interaction):
+    commands_list = [
+        ("!help", "Displays this help message."),
+        ("!ping", "Replies with 'Pong!' to test the bot's responsiveness."),
+        ("!stats", "Shows statistics about the current server."),
+        # Add more commands as necessary
+    ]
+    
+    command_descriptions = "\n".join(f"{cmd}: {desc}" for cmd, desc in commands_list)
+    response = f"**Available Commands:**\n{command_descriptions}"
+
+    await interaction.response.send_message(response)
+
+# Example command for testing
+@bot.command(name="ping")
+async def ping(ctx):
+    await ctx.send("Pong!")
+
+# Example command for server statistics
+@bot.command(name="stats")
+async def stats(ctx):
+    member_count = len(ctx.guild.members)
+    await ctx.send(f"This server has {member_count} members.")
+
+# Run the bot
+try:
+    TOKEN = os.getenv('DISCORD_TOKEN')
     bot.run(TOKEN)
-else:
+except Exception as e:
     logger.error("No valid DISCORD_TOKEN found. Bot cannot start.")
 
-# Ensure aiohttp session and event loop are closed properly
+# Event: Handle disconnect
 @bot.event
 async def on_disconnect():
     logger.info("Closing aiohttp client session...")
     await bot.http.close()
 
+# Ensure the event loop is closed properly
 try:
     asyncio.get_event_loop().run_forever()
 except KeyboardInterrupt:
