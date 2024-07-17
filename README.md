@@ -19,7 +19,8 @@
  > Im also using the packages discord.py for the bot integration. as well as python-dotenv for the bots security, so we arent giving out any bot tokens to anyone.
 
 ### Clone the repository
-Open the command terminal
+1. Open the command terminal
+> You can use powershell on windows or command line
 2. Clone the repository
 ```bash
 git clone https://github.com/gombedlm/NuName.git
@@ -32,6 +33,7 @@ cd NuName-Discord-Bot
 
 ### Installation
 1. Open the command terminal 
+> You can use powershell on windows or command line
 
 2. Install the requirements from the requirements.txt
 ```bash
@@ -44,25 +46,6 @@ discord.py
 python-dotenv
 ```
 
-### Environment Variables
-Once you finish the installation and ensureing that you have the correct dependencies.
-
-1. You are going to need to get yourself a Discord Bot Token to make this whole thing work:
-Sign in and create a profile for your new bot. ----> https://discord.com/login?redirect_to=%2Fdevelopers%2Fapplications%2F
-> Go to the Discord Developer Portal and click "New Application" , name it whatever youd like, then click "Bot" on the left hand menu and select your new bot. Then click "Reset Token" and copy the one that pops up, this is your Bot Token.
-
-> Essentially you just need to create a profile for your bot that you are adding to the server, the script you are installing is its logic to communicate with the server.
-
-2. Navigate to the root directory using:
-```bash
-cd NuName-Discord-Bot
-```
-
-3. Once you have your bot token find the '.env' file in your root directory:
-Replace the value in the variable below with your bot token.
-```bash
-DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
-```
 
 ### Running the bot locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
