@@ -4,7 +4,8 @@ import json
 import os
 import logging
 from dotenv import load_dotenv
-from interactions import SlashCommand
+import asyncio
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -15,26 +16,22 @@ logger.setLevel(logging.INFO)
 # Create handlers
 console_handler = logging.StreamHandler()
 file_handler = logging.FileHandler('bot.log')
-
-# Create formatter and add it to the handlers
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
-
-# Add the handlers to the logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
 # Define intents
 intents = discord.Intents.default()
-intents.members = True  # Enable the members intent
+intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
-slash = SlashCommand(bot, sync_commands=True)  # Initialize SlashCommand with the bot instance
 
-# Load or initialize the internal counter and user data
+# Initialize internal data
 user_data = {"counter": 0, "users": {}}
 
+# Load user data from file
 if os.path.exists('user_data.json'):
     try:
         with open('user_data.json', 'r') as f:
@@ -44,6 +41,7 @@ if os.path.exists('user_data.json'):
 else:
     logger.info("user_data.json not found, initializing with default values.")
 
+# Save user data to file
 def save_user_data():
     try:
         with open('user_data.json', 'w') as f:
@@ -51,6 +49,7 @@ def save_user_data():
     except Exception as e:
         logger.error(f"Error saving user_data.json: {e}")
 
+# Event: Bot is ready
 @bot.event
 async def on_ready():
     try:
@@ -79,6 +78,7 @@ async def on_ready():
     except Exception as e:
         logger.error(f"Error in on_ready: {e}")
 
+# Event: Member joins the server
 @bot.event
 async def on_member_join(member):
     try:
@@ -106,6 +106,7 @@ async def on_member_join(member):
     except Exception as e:
         logger.error(f"Error in on_member_join: {e}")
 
+# Event: Member leaves the server
 @bot.event
 async def on_member_remove(member):
     try:
@@ -113,6 +114,7 @@ async def on_member_remove(member):
     except Exception as e:
         logger.error(f"Error in on_member_remove: {e}")
 
+# Event: Member nickname update
 @bot.event
 async def on_member_update(before, after):
     try:
@@ -126,6 +128,7 @@ async def on_member_update(before, after):
     except Exception as e:
         logger.error(f"Error in on_member_update: {e}")
 
+# Event: Command error handling
 @bot.event
 async def on_command_error(ctx, error):
     try:
@@ -145,13 +148,14 @@ async def on_command_error(ctx, error):
     except Exception as e:
         logger.error(f"Error in on_command_error: {e}")
 
-# Define slash commands using SlashCommand's decorator
-@slash.slash(name="ping", description="Check if the bot is alive")
-async def ping(ctx: SlashContext):
+# Command: Ping
+@bot.command(name="ping", description="Check if the bot is alive")
+async def ping(ctx):
     await ctx.send("Pong!")
 
-@slash.slash(name="id", description="Get your ID-like nickname")
-async def id(ctx: SlashContext):
+# Command: Get ID-like nickname
+@bot.command(name="id", description="Get your ID-like nickname")
+async def id(ctx):
     try:
         user_nickname = user_data["users"].get(str(ctx.author.id), "Nickname not found.")
         await ctx.send(f"Your ID-like nickname is: {user_nickname}")
@@ -159,12 +163,10 @@ async def id(ctx: SlashContext):
         await ctx.send("An error occurred while fetching your nickname.")
         logger.error(f"Error in id command: {e}")
 
-@slash.slash(name="set_ids", description="Set ID-like nicknames for all members (Admin only)")
-async def set_ids(ctx: SlashContext):
-    if not ctx.author.guild_permissions.administrator:
-        await ctx.send("You do not have permission to use this command.", hidden=True)
-        return
-
+# Command: Set ID-like nicknames for all members (Admin only)
+@bot.command(name="set_ids", description="Set ID-like nicknames for all members (Admin only)")
+@commands.has_permissions(administrator=True)
+async def set_ids(ctx):
     try:
         guild = ctx.guild
         user_data["counter"] = 0
@@ -183,40 +185,29 @@ async def set_ids(ctx: SlashContext):
             logger.info(f'NuName assigned nickname {new_nickname} to {member.name}')
 
         save_user_data()
-        await ctx.send("ID-like nicknames have been set for all members.", hidden=True)
+        await ctx.send("ID-like nicknames have been set for all members.")
     except discord.Forbidden:
-        await ctx.send("Permission error: Cannot change nickname for some members.", hidden=True)
+        await ctx.send("Permission error: Cannot change nickname for some members.")
     except Exception as e:
-        await ctx.send("An error occurred while setting ID-like nicknames.", hidden=True)
+        await ctx.send("An error occurred while setting ID-like nicknames.")
         logger.error(f"Error in set_ids command: {e}")
 
-@slash.slash(name="toggle_functionality", description="Enable or disable bot functionality (Admin only)")
-async def toggle_functionality(ctx: SlashContext, feature: str):
-    if not ctx.author.guild_permissions.administrator:
-        await ctx.send("You do not have permission to use this command.", hidden=True)
-        return
-
-    if feature.lower() == "nickname":
-        user_data["toggle_nickname"] = not user_data.get("toggle_nickname", False)
-        status = "enabled" if user_data["toggle_nickname"] else "disabled"
-        await ctx.send(f"Nickname functionality has been {status}.", hidden=True)
-        logger.info(f"Nickname functionality has been {status}.")
-    else:
-        await ctx.send("Unsupported feature. Currently only 'nickname' is supported.", hidden=True)
-
-    save_user_data()
-
 # Get the Discord token from environment variables
-try:
-    TOKEN = os.getenv('DISCORD_TOKEN')
-    if TOKEN is None:
-        raise ValueError("DISCORD_TOKEN environment variable is not set")
-except Exception as e:
-    logger.error(f"Error retrieving DISCORD_TOKEN: {e}")
-    TOKEN = None
-
-# Run the bot with the token
+TOKEN = os.getenv('DISCORD_TOKEN')
 if TOKEN:
     bot.run(TOKEN)
 else:
     logger.error("No valid DISCORD_TOKEN found. Bot cannot start.")
+
+# Ensure aiohttp session and event loop are closed properly
+@bot.event
+async def on_disconnect():
+    logger.info("Closing aiohttp client session...")
+    await bot.http.close()
+
+try:
+    asyncio.get_event_loop().run_forever()
+except KeyboardInterrupt:
+    pass
+finally:
+    asyncio.get_event_loop().close()
