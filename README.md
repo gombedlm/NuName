@@ -240,6 +240,10 @@ Click on OAuth2 in the left sidebar, then select URL generator.
 > If you cant find it hit 'reset token' and re-enter your password to get a new token
 >**If you make a new token, save it to a password manager or somewhere safe**
 4. Finally get into your project folder, find the .env and replace your information with the placeholders
-
+```bash
+DISCORD_TOKEN=your_discord_bot_token_here
+APP_ID=your_app_id_here
+PUBLIC_KEY=your_public_key_here
+```
 # License 
 **This project is licensed under the MIT License. See the LICENSE file for details.**
