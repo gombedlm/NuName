@@ -1,18 +1,13 @@
 # NuName Discord Bot
 
 ## Table of Contents
-- [Setup](#Setup)
-- [Local Configuration](#LocalConfiguration)
-- [Dedicated Configuration](#DedicatedConfiguration)
-- [Adding your Bot](#adding-the-bot-to-your-server)
-- [Windows Configuration](#WindowsConfiguration)
-- [Linux Configuration](#LinuxConfiguration)
-- [Contributing](#contributing)
-- [License](#license)
+- [Setup](Script-Setup)
+    - [Dedicated(Linux-Server)]
+    - [Non-Dedicated(Local)Setup]
 
-# Setup
+# Script Setup
 
-## Local Setup
+## Non Dedicated (Local) Setup
 
 ### Dependencies
 **> WARNING: Python 3.9 SPECIFICALLY IS REQUIRED**
@@ -175,8 +170,8 @@ sudo systemctl enable nuname-discord-bot
 ```bash
 sudo systemctl status nuname-discord-bot
 ```
-
-## Setup on Dedicated Server
+ 
+## Dedicated Server Setup
 This is a guide for if you already have a dedicated server running youd like to run this on.
 1. Prepare the server enviorment 
     make sure that your enviorment is up to date
@@ -216,38 +211,60 @@ python bot.py
 This will start your discord bot on the server that the token is registered to. Ensure that you see the log messages indicating the bot is ready - "NuName bot is ready".
 
 
-# Adding the bot to your discord server
+# Create a new app for your bot to run
+1. Create a new app
+First, you'll need to create an app in the developer portal if you don't have one already:
 
-### Local Configuration
-1. Generate your invite link:
-    - Ensure your bot is running either locally on your machine (either Windows or Linux) or on a dedicated server.
-    - Open your web browser and go to the Discord Developer Portal.
-    - Navigate to your Discord Developer Portal, find your bot app and select the "OAuth2" tab from the left sidebar.
+> Discord Developer Portal Link: https://discord.com/developers/applications?new_application=true
 
-2. OAuth2 Configuration:
-    - In the "OAuth2 URL Generator" section, under "OAuth2 URL Generator," select the scopes needed for your bot (bot for adding as a bot) and the permissions required
-    - Copy the generated URL.
 
-3. Invite to Server:
-    - Paste the copied URL into your web browser's address bar and press Enter.
-    - Select the server you want to add the bot to from the dropdown list.
-    - Click "Authorize" and complete any CAPTCHA prompts if necessary.
-4. Verify:
-After authorization, your bot will join the selected server.
+## Creating the user profile for your bot
+1. Enter a name for your app, then press Create.
+> After you create your app, you'll land on the General Overview page of the app's settings where you can update basic information about your app like its description and icon. 
 
-### Dedicated Server Configuration
-1. Generate Invite Link:
-    - Ensure your bot is deployed and running on your dedicated server.
-    - Follow steps 1 and 2 from the Local Install section to generate an OAuth2 URL with the appropriate permissions.
+> You'll also see an Application ID and Interactions Endpoint URL, which we'll use a bit later in the guide.
 
-2. Invite to Server:
-    - Copy the generated OAuth2 URL and paste it into your web browser's address bar.
-    - Choose the server where you want to add the bot and authorize it by clicking "Authorize."
-**WARNING: Make sure you enable, "REQUIRES OAUTH2 CODE GRANT", and all "Privileged Gateway Intents"**
+## Configuring your bots profile
+1. Next we'll configure the bots user profile for your app.
 
-3. Verify:
-After authorization, your bot will join the selected server.
+> This allows it to appear and behave similarly to other server members.
 
+On the left hand sidebar click Bot. On this page, you can configure settings like its privileged intents or whether it can be installed by other users
+
+2. Getting your bot token
+ > There's also a Token section on the Bot page, which allows you to copy and reset your bot's token.
+
+Bot tokens are used to authorize API requests and carry your bot user's permissions, making them highly sensitive. Make sure to never share your token or check it into any kind of version control.
+
+**Go ahead and copy the token, and store the token somewhere safe (like in a password manager)**
+
+## Adding Scopes and Giving it Permissions
+1. Adding scopes and permissions to your bot
+Next (If needed) select a few scopes and permissions to request before installing the app.
+
+- > When creating an app, scopes and permissions determine what your app can do and access in Discord servers.
+
+- > Apps need approval from installing users to perform actions in Discord (like creating a slash command or fetching a list of server members). 
+
+- OAuth2 Scopes determine what data access and actions your app can take, granted on behalf of an installing or authenticating user.
+
+- Permissions are the granular permissions for your bot user, the same as other users in Discord have. They can be approved by the installing user or later updated within server settings or with permission overwrites.
+
+Click on OAuth2 in the left sidebar, then select URL generator.
+- >The URL generator creates an installation link based on the scopes and permissions you select for your app. You can use the link to install the app onto your own server, or share it with others so they can install it.
+
+
+# Get your credentials and update your enviorment file
+1. Generate your invite Link
+Once you add scopes, you should see a URL that you can copy to install your app.
+
+2. Copy your APP-ID
+
+3. Copy your PUBLIC_KEY
+
+4. Copy your DISCORD_TOKEN
+
+5. Update your .env file
 
 
 
