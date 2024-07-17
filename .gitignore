@@ -1,3 +1,5 @@
 
 __pycache__/bot.cpython-39.pyc
 *.log
+.env
+.env
