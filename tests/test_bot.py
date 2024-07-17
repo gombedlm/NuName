@@ -1,73 +1,114 @@
 import os
 import sys
-import asyncio
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
-from unittest.mock import AsyncMock, MagicMock, patch
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import bot
-# Load environment variables from .env file (adjust path as needed)
-load_dotenv(dotenv_path="../.env")
+import pytest
+import discord
+from discord.ext import commands
+from unittest.mock import AsyncMock, patch, MagicMock
 
-# Mocking bot.py imports
-with patch('discord.Client') as mock_client:
-    mock_bot = MagicMock(spec=commands.Bot)
-    mock_client.return_value = mock_bot
-    mock_bot.user = MagicMock(spec=discord.User)
+# Assuming your bot code is in a file named 'bot.py'
+from bot import bot, on_member_join, on_member_update
 
-    import bot  # Import your bot.py module after mocking
+@pytest.fixture
+def bot_instance():
+    return bot
 
-async def test_bot_on_ready():
-    assert bot.bot.on_ready is not None
-    await bot.bot.on_ready()  # Simulate bot ready event
-    assert "NuName bot" in bot.logger.handlers[0].messages[0]  # Adjust as per your logging configuration
+@pytest.fixture
+def guild():
+    guild = MagicMock(discord.Guild)
+    guild.id = 123456789
+    guild.members = []
+    return guild
 
-async def test_bot_on_member_join():
-    mock_member = MagicMock(spec=discord.Member)
-    mock_member.id = "1234567890"
-    mock_member.name = "TestMember"
-    
-    assert bot.bot.on_member_join is not None
-    await bot.bot.on_member_join(mock_member)  # Simulate member join event
-    assert f'NuName assigned nickname' in bot.logger.handlers[0].messages[1]  # Adjust as per your logging configuration
+@pytest.fixture
+def member(guild):
+    member = MagicMock(discord.Member)
+    member.id = 987654321
+    member.name = "TestUser"
+    member.guild = guild
+    return member
 
-async def test_bot_on_member_remove():
-    mock_member = MagicMock(spec=discord.Member)
-    mock_member.name = "TestMember"
+@pytest.fixture
+def bot_member(guild):
+    bot_member = MagicMock(discord.Member)
+    bot_member.id = 123123123
+    bot_member.name = "TestBot"
+    bot_member.bot = True
+    bot_member.guild = guild
+    return bot_member
 
-    assert bot.bot.on_member_remove is not None
-    await bot.bot.on_member_remove(mock_member)  # Simulate member remove event
-    assert f'{mock_member.name} has left the server.' in bot.logger.handlers[0].messages[2]  # Adjust as per your logging configuration
+@pytest.mark.asyncio
+async def test_on_member_join_member(bot_instance, member):
+    with patch('bot.save_user_data', new_callable=AsyncMock), \
+         patch.object(bot_instance, 'get_guild', return_value=member.guild):
 
-async def test_bot_on_member_update():
-    mock_before = MagicMock(spec=discord.Member)
-    mock_after = MagicMock(spec=discord.Member)
-    mock_before.nick = "OldNick"
-    mock_after.nick = "NewNick"
-    mock_after.id = "1234567890"
+        await on_member_join(member)
 
-    assert bot.bot.on_member_update is not None
-    await bot.bot.on_member_update(mock_before, mock_after)  # Simulate member update event
-    assert f'NuName reverted nickname change' in bot.logger.handlers[0].messages[3]  # Adjust as per your logging configuration
+        assert member.edit.called
+        assert member.edit.call_args[1]['nick'] == '001 | TestUser'
 
-async def test_bot_on_command_error():
-    mock_ctx = MagicMock(spec=commands.Context)
-    mock_error = commands.CommandNotFound("Command not found")
+@pytest.mark.asyncio
+async def test_on_member_join_bot(bot_instance, bot_member):
+    with patch('bot.save_user_data', new_callable=AsyncMock), \
+         patch.object(bot_instance, 'get_guild', return_value=bot_member.guild):
 
-    assert bot.bot.on_command_error is not None
-    await bot.bot.on_command_error(mock_ctx, mock_error)  # Simulate command error event
-    assert "Command not found." in bot.logger.handlers[0].messages[4]  # Adjust as per your error handling
+        await on_member_join(bot_member)
 
-# Run all tests
-async def run_tests():
-    await test_bot_on_ready()
-    await test_bot_on_member_join()
-    await test_bot_on_member_remove()
-    await test_bot_on_member_update()
-    await test_bot_on_command_error()
+        assert bot_member.edit.called
+        assert bot_member.edit.call_args[1]['nick'] == 'BOT | TestBot'
 
-if __name__ == "__main__":
-    asyncio.run(run_tests())
+@pytest.mark.asyncio
+async def test_on_member_update_nickname_change(bot_instance, member):
+    before = member
+    after = MagicMock(discord.Member)
+    after.id = member.id
+    after.name = member.name
+    after.guild = member.guild
+    after.nick = "WrongNickname"
+
+    user_data = {"counter": 1, "users": {str(member.id): "001 | TestUser"}}
+
+    with patch('bot.user_data', user_data):
+        await on_member_update(before, after)
+
+        assert after.edit.called
+        assert after.edit.call_args[1]['nick'] == '001 | TestUser'
+
+@pytest.mark.asyncio
+async def test_on_member_update_no_change(bot_instance, member):
+    before = member
+    after = member
+
+    user_data = {"counter": 1, "users": {str(member.id): "001 | TestUser"}}
+
+    with patch('bot.user_data', user_data):
+        await on_member_update(before, after)
+
+        assert not after.edit.called
+
+@pytest.mark.asyncio
+async def test_on_member_update_key_error(bot_instance, member):
+    before = member
+    after = MagicMock(discord.Member)
+    after.id = member.id
+    after.name = member.name
+    after.guild = member.guild
+    after.nick = "001 | TestUser"
+
+    user_data = {"counter": 1, "users": {}}
+
+    with patch('bot.user_data', user_data):
+        await on_member_update(before, after)
+
+        assert not after.edit.called
+
+@pytest.mark.asyncio
+async def test_on_command_error(bot_instance):
+    ctx = MagicMock(discord.ext.commands.Context)
+    error = commands.CommandNotFound()
+
+    with patch.object(ctx, 'send', new_callable=AsyncMock) as mock_send:
+        await bot_instance.on_command_error(ctx, error)
+
+        mock_send.assert_called_once_with("Command not found.")
