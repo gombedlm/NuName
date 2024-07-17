@@ -8,9 +8,9 @@
     - [Creating a bot Profile](#creating-your-bots-discord-profile)
     - [Adding Permissions](#adding-scopes-and-giving-it-permissions)
 - [Update Your Credentials](#get-your-credentials-and-update-your-enviorment-file)
-    -[Get Your Discord Token]()
-    -[Get Your]()
-    -[]()
+    -[Get Your Discord Token](#discord_token)
+    -[Get Your Application Id](#app_id)
+    -[Get Your Public Key](#public_key)
 ## Script Setup
 
 ### Non Dedicated Setup (Local-Desktop)
@@ -232,13 +232,17 @@ Click on OAuth2 in the left sidebar, then select URL generator.
 - > The URL generator creates an installation link based on the scopes and permissions you select for your app. You can use the link to install the app onto your own server, or share it with others so they can install it.
 
 ## Update Your Credentials
-1. Get your APP_ID (Application_Id) from the general settings in your discord developer dashboard
-
+### APP_ID:
+1. Get your APP_ID (Application_Id) 
+> Found in the general settings in your discord developer dashboard
+### PUBLIC_KEY
 2. Get your PUBLIC_KEY from the general settings, underneath the APP_ID
-
+> Found under the APP_ID in the general settings in your discord developer dashboard
+### DISCORD_TOKEN
 3. Get your DISCORD_TOKEN from the Bot Tab
+> Found under bot menu in discord developer dashboard
 > If you cant find it hit 'reset token' and re-enter your password to get a new token
->**If you make a new token, save it to a password manager or somewhere safe**
+>**If you make a new token, save it to a password manager or somewhere safe and DO NOT SHARE WITH ANYONE**
 4. Finally get into your project folder, find the .env and replace your information with the placeholders
 ```bash
 DISCORD_TOKEN=your_discord_bot_token_here
