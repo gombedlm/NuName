@@ -51,49 +51,61 @@ def save_user_data():
 
 @bot.event
 async def on_ready():
-    logger.info(f'NuName bot {bot.user} is ready.')
+    try:
+        logger.info(f'NuName bot {bot.user} is ready.')
 
-    # Ensure bot is connected to at least one guild
-    if len(bot.guilds) == 0:
-        logger.warning("Bot is not connected to any guilds.")
-        return
+        # Ensure bot is connected to at least one guild
+        if len(bot.guilds) == 0:
+            logger.warning("Bot is not connected to any guilds.")
+            return
 
-    # Proceed with handling guild data
-    guild = bot.guilds[0]  # Assuming the bot is in only one guild
+        # Proceed with handling guild data
+        guild = bot.guilds[0]  # Assuming the bot is in only one guild
 
-    existing_numbers = []
-    for member in guild.members:
-        if member.nick:
-            try:
-                number = int(member.nick.split(" | ")[0])
-                existing_numbers.append(number)
-            except ValueError:
-                logger.warning(f"Invalid nickname format for {member.name}")
+        existing_numbers = []
+        for member in guild.members:
+            if member.nick:
+                try:
+                    number = int(member.nick.split(" | ")[0])  # Assuming current format is "number | Name"
+                    existing_numbers.append(number)
+                except ValueError:
+                    logger.warning(f"Invalid nickname format for {member.name}")
 
-    if existing_numbers:
-        user_data["counter"] = max(existing_numbers)
+        if existing_numbers:
+            user_data["counter"] = max(existing_numbers)
 
-    save_user_data()
+        save_user_data()
+
+    except Exception as e:
+        logger.error(f"Error in on_ready: {e}")
+        print(f"Error in on_ready: {e}")
 
 @bot.event
 async def on_member_join(member):
-    existing_numbers = []
     try:
+        existing_numbers = []
+
         # Find the next available counter
-        while user_data["counter"] + 1 in existing_numbers:
+        while user_data["counter"] + 1 in user_data["users"].keys():
             user_data["counter"] += 1
 
         user_data["counter"] += 1
-        user_data["users"][str(member.id)] = f'{user_data["counter"]:03} | {member.name}'
+        user_data["users"][str(member.id)] = f'{user_data["counter"]:03} | {member.name}'  # Example format: "456 | Big123"
         save_user_data()
 
-        new_nickname = user_data["users"][str(member.id)]
+        new_nickname = f'{user_data["counter"]:03} | {member.name}'
         await member.edit(nick=new_nickname)
         logger.info(f'NuName assigned nickname {new_nickname} to {member.name}')
+
+        # Send a friendly welcome message to the member
+        await member.send(f"Welcome to the server, {member.name}! Your ID-like nickname is now: {new_nickname}")
+
     except discord.Forbidden:
         logger.error(f"Permission error: Cannot change nickname for {member.name}")
+        print(f"Permission error: Cannot change nickname for {member.name}")
     except Exception as e:
         logger.error(f"Error in on_member_join: {e}")
+        print(f"Error in on_member_join: {e}")
 
 @bot.event
 async def on_member_remove(member):
@@ -101,6 +113,7 @@ async def on_member_remove(member):
         logger.info(f'{member.name} has left the server.')
     except Exception as e:
         logger.error(f"Error in on_member_remove: {e}")
+        print(f"Error in on_member_remove: {e}")
 
 @bot.event
 async def on_member_update(before, after):
@@ -110,28 +123,41 @@ async def on_member_update(before, after):
             logger.info(f'NuName reverted nickname change for {after.name}')
     except discord.Forbidden:
         logger.error(f"Permission error: Cannot change nickname for {after.name}")
+        print(f"Permission error: Cannot change nickname for {after.name}")
     except KeyError:
         logger.error(f"User {after.name} not found in user_data")
+        print(f"User {after.name} not found in user_data")
     except Exception as e:
         logger.error(f"Error in on_member_update: {e}")
+        print(f"Error in on_member_update: {e}")
 
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        await ctx.send("Command not found.")
-    elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Missing required argument.")
-    elif isinstance(error, commands.BadArgument):
-        await ctx.send("Bad argument.")
-    else:
-        await ctx.send("An error occurred.")
-        logger.error(f"Unhandled command error: {error}")
+    try:
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send("Command not found.")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Missing required argument.")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Bad argument.")
+        else:
+            await ctx.send("An error occurred.")
+            logger.error(f"Unhandled command error: {error}")
+            print(f"Unhandled command error: {error}")
+    except Exception as e:
+        logger.error(f"Error in on_command_error: {e}")
+        print(f"Error in on_command_error: {e}")
 
 # Get the Discord token from environment variable
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 if TOKEN is None:
     logger.error("DISCORD_TOKEN is not set in the .env file.")
+    print("DISCORD_TOKEN is not set in the .env file.")
 else:
-    # Run the bot with the Discord token
-    bot.run(TOKEN)
+    try:
+        # Run the bot with the Discord token
+        bot.run(TOKEN)
+    except Exception as e:
+        logger.error(f"Error running bot: {e}")
+        print(f"Error running bot: {e}")

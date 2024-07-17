@@ -8,6 +8,9 @@
     - [Creating a bot Profile](#creating-your-bots-discord-profile)
     - [Adding Permissions](#adding-scopes-and-giving-it-permissions)
 - [Update Your Credentials](#get-your-credentials-and-update-your-enviorment-file)
+    -[Get Your Discord Token]()
+    -[Get Your]()
+    -[]()
 ## Script Setup
 
 ### Non Dedicated Setup (Local-Desktop)
@@ -187,6 +190,8 @@ pip install -r requirements.txt
 Ensure that '.env' file is properly configured with the necessary environment variables particularlly 'DISCORD_TOKEN' where you will store your bots token (so no bad actors will hack into your servers bot)
 ```bash
 DISCORD_TOKEN=your_discord_bot_token_here
+APP_ID=your_app_id_here
+PUBLIC_KEY=your_public_key_here
 ```
 7. Start the bot
 Run the script in your server enviorment
@@ -226,18 +231,15 @@ Next (If needed) select a few scopes and permissions to request before installin
 Click on OAuth2 in the left sidebar, then select URL generator.
 - > The URL generator creates an installation link based on the scopes and permissions you select for your app. You can use the link to install the app onto your own server, or share it with others so they can install it.
 
+## Update Your Credentials
+1. Get your APP_ID (Application_Id) from the general settings in your discord developer dashboard
 
-### Get your credentials and update your enviorment file
-1. Generate your invite Link
-Once you add scopes, you should see a URL that you can copy and use this in .
+2. Get your PUBLIC_KEY from the general settings, underneath the APP_ID
 
-2. Copy your APP-ID
-
-3. Copy your PUBLIC_KEY
-
-4. Copy your DISCORD_TOKEN
-
-5. Update your .env file
+3. Get your DISCORD_TOKEN from the Bot Tab
+> If you cant find it hit 'reset token' and re-enter your password to get a new token
+>**If you make a new token, save it to a password manager or somewhere safe**
+4. Finally get into your project folder, find the .env and replace your information with the placeholders
 
 # License 
 **This project is licensed under the MIT License. See the LICENSE file for details.**
