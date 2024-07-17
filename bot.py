@@ -9,6 +9,11 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Ensure the logs directory exists
+logs_dir = 'logs'
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
+
 # Configure logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -18,6 +23,16 @@ logging.basicConfig(level=logging.INFO,
                     ])
 
 logger = logging.getLogger('discord')
+logger.setLevel(logging.INFO)
+
+# Create handlers
+console_handler = logging.StreamHandler()
+file_handler = logging.FileHandler(os.path.join(logs_dir, 'bot.log'))
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
 # Define intents
 intents = discord.Intents.default()
@@ -26,11 +41,20 @@ intents.members = True
 # Initialize bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Ensure the data directory exists
+data_dir = 'data'
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
+
 # Load user data
+user_data_path = os.path.join(data_dir, 'user_data.json')
 user_data = {"counter": 0, "users": {}}
+
+# Load user data from file
+if os.path.exists(user_data_path):
 if os.path.exists('user_data.json'):
     try:
-        with open('user_data.json', 'r') as f:
+        with open(user_data_path, 'r') as f:
             user_data = json.load(f)
     except (json.JSONDecodeError, FileNotFoundError) as e:
         logger.error(f"Error loading user_data.json: {e}")
@@ -38,7 +62,7 @@ if os.path.exists('user_data.json'):
 # Save user data
 def save_user_data():
     try:
-        with open('user_data.json', 'w') as f:
+        with open(user_data_path, 'w') as f:
             json.dump(user_data, f, indent=4)
     except Exception as e:
         logger.error(f"Error saving user_data.json: {e}")
@@ -114,37 +138,11 @@ async def on_member_update(before, after):
     except Exception as e:
         logger.error(f"Error in on_member_update: {e}")
 
-# Slash command to list available commands
-@bot.tree.command(name="NuName-Commands", description="List all commands currently available")
-async def slash_command(interaction: discord.Interaction):
-    commands_list = [
-        ("!help", "Displays this help message."),
-        ("!ping", "Replies with 'Pong!' to test the bot's responsiveness."),
-        ("!stats", "Shows statistics about the current server."),
-        # Add more commands as necessary
-    ]
-    
-    command_descriptions = "\n".join(f"{cmd}: {desc}" for cmd, desc in commands_list)
-    response = f"**Available Commands:**\n{command_descriptions}"
-
-    await interaction.response.send_message(response)
-
-# Example command for testing
-@bot.command(name="ping")
-async def ping(ctx):
-    await ctx.send("Pong!")
-
-# Example command for server statistics
-@bot.command(name="stats")
-async def stats(ctx):
-    member_count = len(ctx.guild.members)
-    await ctx.send(f"This server has {member_count} members.")
-
-# Run the bot
-try:
-    TOKEN = os.getenv('DISCORD_TOKEN')
+# Get the Discord token from environment variables
+TOKEN = os.getenv('DISCORD_TOKEN')
+if TOKEN:
     bot.run(TOKEN)
-except Exception as e:
+else:
     logger.error("No valid DISCORD_TOKEN found. Bot cannot start.")
 
 # Event: Handle disconnect
@@ -160,3 +158,5 @@ except KeyboardInterrupt:
     pass
 finally:
     asyncio.get_event_loop().close()
+
+
