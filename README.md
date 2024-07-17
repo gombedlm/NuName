@@ -2,12 +2,13 @@
 
 ## Table of Contents
 - [Setup](Script-Setup)
-    - [Dedicated(Linux-Server)]
-    - [Non-Dedicated(Local)Setup]
+    - [Dedicated-Setup(Linux-Server)]
+    - [NonDedicated-Setup(Local-Desktop)]
+-[Running-Your-Bot]
 
-# Script Setup
+## Script Setup
 
-## Non Dedicated (Local) Setup
+### Non Dedicated Setup (Local-Desktop)
 
 ### Dependencies
 **> WARNING: Python 3.9 SPECIFICALLY IS REQUIRED**
@@ -16,7 +17,7 @@
  > Im also using the packages discord.py for the bot integration. as well as python-dotenv for the bots security, so we arent giving out any bot tokens to anyone.
 
 ### Clone the repository
-1. Open the command terminal
+Open the command terminal
 2. Clone the repository
 ```bash
 git clone https://github.com/gombedlm/NuName.git
@@ -64,7 +65,7 @@ DISCORD_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
 ### Running the bot locally
 So if you dont feel like setting up an entire server or just dont have one, you dont need to.
 
-### Running on Windows
+#### Running on Windows locally
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -76,7 +77,7 @@ python bot.py
 ```
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
-#### Windows Auto-Start Configuration
+##### Windows Auto-Start Configuration
 1. Using Task Scheduler on Windows
     Press Win + R to open the Run dialog.
     - Type taskschd.msc and press Enter to open Task Scheduler.
@@ -115,7 +116,7 @@ python bot.py
     - Click "OK" to create the task.
     > **You will be prompted to enter your Windows account password to save the task.**
 
-### Running on Linux
+#### Running on Linux locally
 1. Open command terminal and navigate to the root directory of the bot.
 ```bash
 cd path/to/your/bot.py
@@ -128,7 +129,7 @@ python bot.py
 > if you dont mind restarting your bot everytime you restart your computer then thats it you can stop there,  otherwise follow the instructions below.
 
 
-#### Linux Auto-Start Configuration
+##### Linux Auto-Start Configuration
 1. Create a systemd service file in the /etc/systemd directory:
 ```bash
 sudo nano /etc/systemd/system/nuname-discord-bot.service
@@ -171,7 +172,7 @@ sudo systemctl enable nuname-discord-bot
 sudo systemctl status nuname-discord-bot
 ```
  
-## Dedicated Server Setup
+### Dedicated Server Setup(Linux-Server)
 This is a guide for if you already have a dedicated server running youd like to run this on.
 1. Prepare the server enviorment 
     make sure that your enviorment is up to date
@@ -211,34 +212,36 @@ python bot.py
 This will start your discord bot on the server that the token is registered to. Ensure that you see the log messages indicating the bot is ready - "NuName bot is ready".
 
 
-# Create a new app for your bot to run
-1. Create a new app
+## Connecting to a Discord Server
+
+### Configuring your bots profile
+
+1. Configure your bots user profile
 First, you'll need to create an app in the developer portal if you don't have one already:
 
 > Discord Developer Portal Link: https://discord.com/developers/applications?new_application=true
-
-
-## Creating the user profile for your bot
-1. Enter a name for your app, then press Create.
-> After you create your app, you'll land on the General Overview page of the app's settings where you can update basic information about your app like its description and icon. 
-
-> You'll also see an Application ID and Interactions Endpoint URL, which we'll use a bit later in the guide.
-
-## Configuring your bots profile
-1. Next we'll configure the bots user profile for your app.
 
 > This allows it to appear and behave similarly to other server members.
 
 On the left hand sidebar click Bot. On this page, you can configure settings like its privileged intents or whether it can be installed by other users
 
-2. Getting your bot token
- > There's also a Token section on the Bot page, which allows you to copy and reset your bot's token.
+### Creating the user profile for your bot
+1. Enter a name for your app, then press Create.
+> After you create your app, you'll land on the General Overview page of the app's settings where you can update basic information about your app like its description and icon. 
 
-Bot tokens are used to authorize API requests and carry your bot user's permissions, making them highly sensitive. Make sure to never share your token or check it into any kind of version control.
+You'll see an Application ID and Interactions Endpoint URL, which we'll use a bit later in the guide.
+
+
+
+
+2. Getting your bot token
+There's a Token section on the Bot page, which allows you to copy and reset your bot's token.
+
+> Bot tokens are used to authorize API requests and carry your bot user's permissions, making them highly sensitive. Make sure to never share your token or check it into any kind of version control.
 
 **Go ahead and copy the token, and store the token somewhere safe (like in a password manager)**
 
-## Adding Scopes and Giving it Permissions
+### Adding Scopes and Giving it Permissions
 1. Adding scopes and permissions to your bot
 Next (If needed) select a few scopes and permissions to request before installing the app.
 
@@ -246,17 +249,17 @@ Next (If needed) select a few scopes and permissions to request before installin
 
 - > Apps need approval from installing users to perform actions in Discord (like creating a slash command or fetching a list of server members). 
 
-- OAuth2 Scopes determine what data access and actions your app can take, granted on behalf of an installing or authenticating user.
+- > OAuth2 Scopes determine what data access and actions your app can take, granted on behalf of an installing or authenticating user.
 
-- Permissions are the granular permissions for your bot user, the same as other users in Discord have. They can be approved by the installing user or later updated within server settings or with permission overwrites.
+- > Permissions are the granular permissions for your bot user, the same as other users in Discord have. They can be approved by the installing user or later updated within server settings or with permission overwrites.
 
 Click on OAuth2 in the left sidebar, then select URL generator.
-- >The URL generator creates an installation link based on the scopes and permissions you select for your app. You can use the link to install the app onto your own server, or share it with others so they can install it.
+- > The URL generator creates an installation link based on the scopes and permissions you select for your app. You can use the link to install the app onto your own server, or share it with others so they can install it.
 
 
-# Get your credentials and update your enviorment file
+### Get your credentials and update your enviorment file
 1. Generate your invite Link
-Once you add scopes, you should see a URL that you can copy to install your app.
+Once you add scopes, you should see a URL that you can copy and use this in .
 
 2. Copy your APP-ID
 
@@ -265,11 +268,6 @@ Once you add scopes, you should see a URL that you can copy to install your app.
 4. Copy your DISCORD_TOKEN
 
 5. Update your .env file
-
-
-
-
-
 
 # License 
 **This project is licensed under the MIT License. See the LICENSE file for details.**
