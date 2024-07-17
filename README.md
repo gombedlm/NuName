@@ -17,7 +17,7 @@
 
 ### Dependencies
 **> WARNING: Python 3.9 SPECIFICALLY IS REQUIRED**
- Make sure you have python 3.9 EXACTLY. Ensure its installed before running the command if you have another python installation then you need to uninstall it or ensure you run it with pyhton 3.9 or you will end up with an installation that does not work properly.
+ Make sure you have python 3.9 EXACTLY for discord.py to work. Ensure the dependency discord.py is installed with the requirements.txt before running the command if you have another python installation then you need to uninstall it or ensure you run it with pyhton 3.9 or you will end up with an installation that does not work properly.
 
  > Im also using the packages discord.py for the bot integration. as well as python-dotenv for the bots security, so we arent giving out any bot tokens to anyone.
 
