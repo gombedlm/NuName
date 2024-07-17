@@ -2,12 +2,12 @@
 
 ## Table of Contents
 - [Setup](#script-setup)
-    - [Dedicated-Setup(Linux-Server)](#dedicated-server-setuplinux-server)
-    - [Non-Dedicated-Setup(Local-Desktop)](#non-dedicated-setup-local-desktop)
-- [Connecting to your Server](#connecting-to-a-discord-server)
-    - [Create-Profile](#creating-your-bots-discord-profile)
-    - [Adding-Permissions](#adding-scopes-and-giving-it-permissions)
-- [Updating-Your-Enviorment](#get-your-credentials-and-update-your-enviorment-file)
+    - [Running a Dedicated Server](#dedicated-server-setuplinux-server)
+    - [Run on your desktop](#non-dedicated-setup-local-desktop)
+- [Connecting to Your Discord Server](#connecting-to-a-discord-server)
+    - [Creating a bot Profile](#creating-your-bots-discord-profile)
+    - [Adding Permissions](#adding-scopes-and-giving-it-permissions)
+- [Update Your Credentials](#get-your-credentials-and-update-your-enviorment-file)
 ## Script Setup
 
 ### Non Dedicated Setup (Local-Desktop)
