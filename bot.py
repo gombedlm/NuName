@@ -57,8 +57,13 @@ async def on_ready():
 async def on_member_join(member):
     try:
         if str(member.id) not in user_data["users"]:
-            user_data["counter"] += 1
-            user_data["users"][str(member.id)] = f'{user_data["counter"]:03} | {member.name}'
+            # Find the next available number for the new member
+            taken_numbers = {int(val.split(' | ')[0]) for val in user_data["users"].values()}
+            new_number = 1
+            while new_number in taken_numbers:
+                new_number += 1
+
+            user_data["users"][str(member.id)] = f'{new_number:03} | {member.name}'
             save_user_data()
         
         new_nickname = user_data["users"][str(member.id)]
@@ -101,11 +106,17 @@ async def on_command_error(ctx, error):
         await ctx.send("An error occurred.")
         logger.error(f"Unhandled command error: {error}")
 
-# Get the Discord token from environment variable
+# Get the Discord token, App ID, and Public Key from environment variables
 TOKEN = os.getenv('DISCORD_TOKEN')
+APP_ID = os.getenv('APP_ID')
+PUBLIC_KEY = os.getenv('PUBLIC_KEY')
 
 if TOKEN is None:
     logger.error("DISCORD_TOKEN is not set in the .env file.")
 else:
+    # Log the App ID and Public Key for debugging purposes (optional)
+    logger.info(f"App ID: {APP_ID}")
+    logger.info(f"Public Key: {PUBLIC_KEY}")
+
     # Run the bot with the Discord token
     bot.run(TOKEN)
