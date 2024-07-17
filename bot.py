@@ -9,13 +9,18 @@ import asyncio
 # Load environment variables from .env file
 load_dotenv()
 
+# Ensure the logs directory exists
+logs_dir = 'logs'
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
+
 # Configure logging
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)
 
 # Create handlers
 console_handler = logging.StreamHandler()
-file_handler = logging.FileHandler('bot.log')
+file_handler = logging.FileHandler(os.path.join(logs_dir, 'bot.log'))
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
@@ -28,13 +33,19 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Ensure the data directory exists
+data_dir = 'data'
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
+
 # Initialize internal data
+user_data_path = os.path.join(data_dir, 'user_data.json')
 user_data = {"counter": 0, "users": {}}
 
 # Load user data from file
-if os.path.exists('user_data.json'):
+if os.path.exists(user_data_path):
     try:
-        with open('user_data.json', 'r') as f:
+        with open(user_data_path, 'r') as f:
             user_data = json.load(f)
     except (json.JSONDecodeError, FileNotFoundError) as e:
         logger.error(f"Error loading user_data.json: {e}")
@@ -44,7 +55,7 @@ else:
 # Save user data to file
 def save_user_data():
     try:
-        with open('user_data.json', 'w') as f:
+        with open(user_data_path, 'w') as f:
             json.dump(user_data, f, indent=4)
     except Exception as e:
         logger.error(f"Error saving user_data.json: {e}")
@@ -129,11 +140,18 @@ async def on_member_update(before, after):
         logger.error(f"Error in on_member_update: {e}")
 
 # Get the Discord token from environment variables
-TOKEN = os.getenv('DISCORD_TOKEN')
+try:
+    TOKEN = os.getenv('DISCORD_TOKEN')
+    if not TOKEN:
+        raise ValueError("No valid DISCORD_TOKEN found.")
+except Exception as e:
+    logger.error(f"Error retrieving DISCORD_TOKEN: {e}")
+    TOKEN = None
+
 if TOKEN:
     bot.run(TOKEN)
 else:
-    logger.error("No valid DISCORD_TOKEN found. Bot cannot start.")
+    logger.error("Bot cannot start without a valid DISCORD_TOKEN.")
 
 # Ensure aiohttp session and event loop are closed properly
 @bot.event
@@ -147,3 +165,5 @@ except KeyboardInterrupt:
     pass
 finally:
     asyncio.get_event_loop().close()
+
+
