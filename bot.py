@@ -53,10 +53,15 @@ def save_user_data():
 async def on_ready():
     logger.info(f'NuName bot {bot.user} is ready.')
 
-    # Check existing members and adjust counter if necessary
-    guild = bot.guilds[0]  # Assuming the bot is in only one guild
-    existing_numbers = []
+    # Ensure bot is connected to at least one guild
+    if len(bot.guilds) == 0:
+        logger.warning("Bot is not connected to any guilds.")
+        return
 
+    # Proceed with handling guild data
+    guild = bot.guilds[0]  # Assuming the bot is in only one guild
+
+    existing_numbers = []
     for member in guild.members:
         if member.nick:
             try:
