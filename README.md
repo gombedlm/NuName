@@ -2,8 +2,8 @@
 
 ## Table of Contents
 - [Setup](#script-setup)
-    - [Dedicated-Setup(Linux-Server)]
-    - [Non-Dedicated-Setup(Local-Desktop)]
+    - [Dedicated-Setup(Linux-Server)](#dedicated-server-setuplinux-server)
+    - [Non-Dedicated-Setup(Local-Desktop)](#non-dedicated-setup-local-desktop)
 - [Connecting to your Server](#connecting-to-a-discord-server)
     - [Create-Profile](#creating-your-bots-discord-profile)
     - [Adding-Permissions](#adding-scopes-and-giving-it-permissions)
