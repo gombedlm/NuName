@@ -3,3 +3,4 @@ __pycache__/bot.cpython-39.pyc
 *.log
 .env
 .env
+user_data.json
