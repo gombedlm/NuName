@@ -8,9 +8,9 @@
     - [Creating a bot Profile](#creating-your-bots-discord-profile)
     - [Adding Permissions](#adding-scopes-and-giving-it-permissions)
 - [Update Your Credentials](#get-your-credentials-and-update-your-enviorment-file)
-    -[Get Your Discord Token](#discord_token)
-    -[Get Your Application Id](#app_id)
-    -[Get Your Public Key](#public_key)
+    - [Get Your Discord Token](#discord_token)
+    - [Get Your Application Id](#app_id)
+    - [Get Your Public Key](#public_key)
 ## Script Setup
 
 ### Non Dedicated Setup (Local-Desktop)
@@ -216,8 +216,34 @@ There's a Token section on the Bot page, which allows you to copy and reset your
 
 **Go ahead and copy the token, and store the token somewhere safe (like in a password manager)**
 
+### Update Your Credentials
+#### APP_ID:
+1. Get your APP_ID (Application_Id) 
+> Found in the general settings in your discord developer dashboard
+#### PUBLIC_KEY
+2. Get Your PUBLIC_KEY from the general settings, underneath the APP_ID
+> Found under the APP_ID in the general settings in your discord developer dashboard
+#### DISCORD_TOKEN
+3. Get Your DISCORD_TOKEN from the Bot Tab
+> Found under bot menu in discord developer dashboard
+> If you cant find it hit 'reset token' and re-enter your password to get a new token
+>**If you make a new token, save it to a password manager or somewhere safe and DO NOT SHARE WITH ANYONE**
+4. Finally get into your project folder, find the .env and replace your information with the placeholders
+```bash
+DISCORD_TOKEN=your_discord_bot_token_here
+APP_ID=your_app_id_here
+PUBLIC_KEY=your_public_key_here
+```
+
+### Creating your invite link
+1. Under "Redirects" Click add another:
+> Replace this with the following
+```bash
+https://localhost/callback
+```
+Continue with the next steps, adding scopes and permissions
 ### Adding Scopes and Giving it Permissions
-1. Adding scopes and permissions to your bot
+1. Adding scopes and Permissions to Your Bot
 Next (If needed) select a few scopes and permissions to request before installing the app.
 
 - > When creating an app, scopes and permissions determine what your app can do and access in Discord servers.
@@ -231,23 +257,13 @@ Next (If needed) select a few scopes and permissions to request before installin
 Click on OAuth2 in the left sidebar, then select URL generator.
 - > The URL generator creates an installation link based on the scopes and permissions you select for your app. You can use the link to install the app onto your own server, or share it with others so they can install it.
 
-## Update Your Credentials
-### APP_ID:
-1. Get your APP_ID (Application_Id) 
-> Found in the general settings in your discord developer dashboard
-### PUBLIC_KEY
-2. Get your PUBLIC_KEY from the general settings, underneath the APP_ID
-> Found under the APP_ID in the general settings in your discord developer dashboard
-### DISCORD_TOKEN
-3. Get your DISCORD_TOKEN from the Bot Tab
-> Found under bot menu in discord developer dashboard
-> If you cant find it hit 'reset token' and re-enter your password to get a new token
->**If you make a new token, save it to a password manager or somewhere safe and DO NOT SHARE WITH ANYONE**
-4. Finally get into your project folder, find the .env and replace your information with the placeholders
+2. Select URI redirect link
+select the place holder uri you made earlier from the drop down list
 ```bash
-DISCORD_TOKEN=your_discord_bot_token_here
-APP_ID=your_app_id_here
-PUBLIC_KEY=your_public_key_here
+https://localhost/callback
 ```
+
+3. Copy the URL generated and open it in your browser
+You will see the bot join the server and give you a welcome message
 # License 
 **This project is licensed under the MIT License. See the LICENSE file for details.**
