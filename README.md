@@ -1,7 +1,7 @@
 # NuName Discord Bot
 
 ## Table of Contents
-- [Setup](#script-setup)
+- [Script Setup](#script-setup)
     - [Running a Dedicated Server](#dedicated-server-setuplinux-server)
     - [Run on your desktop](#non-dedicated-setup-local-desktop)
 - [Connecting to Your Discord Server](#connecting-to-a-discord-server)
