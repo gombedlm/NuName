@@ -1,11 +1,13 @@
 # NuName Discord Bot
 
 ## Table of Contents
-- [Setup](Script-Setup)
+- [Setup](#script-setup)
     - [Dedicated-Setup(Linux-Server)]
-    - [NonDedicated-Setup(Local-Desktop)]
--[Running-Your-Bot]
-
+    - [Non-Dedicated-Setup(Local-Desktop)]
+- [Connecting to your Server](#connecting-to-a-discord-server)
+    - [Create-Profile](#creating-your-bots-discord-profile)
+    - [Adding-Permissions](#adding-scopes-and-giving-it-permissions)
+- [Updating-Your-Enviorment](#get-your-credentials-and-update-your-enviorment-file)
 ## Script Setup
 
 ### Non Dedicated Setup (Local-Desktop)
@@ -214,25 +216,10 @@ This will start your discord bot on the server that the token is registered to. 
 
 ## Connecting to a Discord Server
 
-### Configuring your bots profile
-
-1. Configure your bots user profile
-First, you'll need to create an app in the developer portal if you don't have one already:
-
-> Discord Developer Portal Link: https://discord.com/developers/applications?new_application=true
-
-> This allows it to appear and behave similarly to other server members.
-
-On the left hand sidebar click Bot. On this page, you can configure settings like its privileged intents or whether it can be installed by other users
-
-### Creating the user profile for your bot
+### Creating your bots discord profile
 1. Enter a name for your app, then press Create.
-> After you create your app, you'll land on the General Overview page of the app's settings where you can update basic information about your app like its description and icon. 
-
 You'll see an Application ID and Interactions Endpoint URL, which we'll use a bit later in the guide.
-
-
-
+> After you create your app, you'll land on the General Overview page of the app's settings where you can update basic information about your app like its description and icon. 
 
 2. Getting your bot token
 There's a Token section on the Bot page, which allows you to copy and reset your bot's token.
