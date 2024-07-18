@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 import json
+import re
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -58,26 +59,57 @@ async def on_ready():
 async def organize_nicknames(interaction: discord.Interaction):
     user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
     naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {display_name}"})
+    naming_format = naming_convention["format"]
 
-    try:
-        while user_data["counter"] + 1 in user_data["users"]:
-            user_data["counter"] += 1
+    # Function to parse ID from nickname
+    def extract_id(nickname):
+        match = re.match(r"(\d{3})", nickname)
+        if match:
+            return int(match.group(1))
+        return None
 
-        user_data["counter"] += 1
-        member = interaction.guild.get_member(interaction.user.id)
-        display_name = member.display_name
-        new_nickname = naming_convention["format"].format(counter=user_data["counter"], display_name=display_name)
-        user_data["users"][str(interaction.user.id)] = new_nickname
+    # Ensure the bot has the required permissions
+    if not interaction.guild.me.guild_permissions.manage_nicknames:
+        await interaction.response.send_message("I do not have the `Manage Nicknames` permission.", ephemeral=True)
+        return
 
-        # Save updated user data
-        save_json(USER_DATA_PATH, user_data)
+    members = interaction.guild.members
+    current_ids = {extract_id(member.display_name) for member in members if extract_id(member.display_name) is not None}
+    max_id = max(current_ids, default=0)
+    
+    # Filter and sort members
+    members_with_convention = []
+    members_without_convention = []
+    
+    for member in members:
+        if extract_id(member.display_name) is not None:
+            members_with_convention.append(member)
+        else:
+            members_without_convention.append(member)
 
-        # Update the user's nickname
+    # Sort members without convention
+    members_without_convention.sort(key=lambda m: m.display_name)
+
+    # Assign IDs to members without convention
+    available_ids = set(range(1, max_id + 2)) - current_ids
+    new_counter = max_id + 1
+    user_data["counter"] = new_counter
+
+    for member in members_without_convention:
+        new_id = min(available_ids, default=new_counter)
+        new_nickname = naming_format.format(counter=new_id, display_name=member.display_name)
         await member.edit(nick=new_nickname)
-        await interaction.response.send_message(f"Your nickname has been updated to: {new_nickname}")
+        user_data["users"][str(member.id)] = new_nickname
+        available_ids.discard(new_id)
+        if not available_ids:
+            new_counter += 1
+            available_ids.add(new_counter)
+        user_data["counter"] = new_counter
 
-    except Exception as e:
-        await interaction.response.send_message(f"An error occurred: {e}")
+    # Save updated user data
+    save_json(USER_DATA_PATH, user_data)
+
+    await interaction.response.send_message("Nicknames have been organized and updated.")
 
 # Slash command to display available commands
 @bot.tree.command(name="list_commands", description="Show available commands.")
