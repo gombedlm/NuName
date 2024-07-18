@@ -70,8 +70,11 @@ async def on_ready():
     """Handles the bot's readiness."""
     logger.info(f'NuName bot {bot.user} is ready.')
     try:
-        synced = await bot.tree.sync()
-        logger.info(f"Synced {len(synced)} commands")
+        # Registering commands to a specific guild for testing
+        GUILD_ID = int(os.getenv('GUILD_ID'))  # Ensure you set this in your .env file
+        guild = discord.Object(id=GUILD_ID)
+        synced = await bot.tree.sync(guild=guild)
+        logger.info(f"Synced {len(synced)} commands to guild {GUILD_ID}")
     except Exception as e:
         logger.error(f"Failed to sync commands: {e}")
 
