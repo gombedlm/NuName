@@ -57,18 +57,23 @@ async def on_ready():
 @bot.tree.command(name="organize_nicknames", description="Organize nicknames based on a numbering convention.")
 async def organize_nicknames(interaction: discord.Interaction):
     user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
-    naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {username}"})
+    naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {display_name}"})
 
     try:
         while user_data["counter"] + 1 in user_data["users"]:
             user_data["counter"] += 1
 
         user_data["counter"] += 1
-        new_nickname = naming_convention["format"].format(counter=user_data["counter"], username=interaction.user.name)
+        member = interaction.guild.get_member(interaction.user.id)
+        display_name = member.display_name
+        new_nickname = naming_convention["format"].format(counter=user_data["counter"], display_name=display_name)
         user_data["users"][str(interaction.user.id)] = new_nickname
 
         # Save updated user data
         save_json(USER_DATA_PATH, user_data)
+
+        # Update the user's nickname
+        await member.edit(nick=new_nickname)
         await interaction.response.send_message(f"Your nickname has been updated to: {new_nickname}")
 
     except Exception as e:
