@@ -4,7 +4,6 @@ import json
 import os
 import logging
 from dotenv import load_dotenv
-from discord import app_commands
 
 # Load environment variables
 load_dotenv()
@@ -37,8 +36,8 @@ logger.setLevel(logging.INFO)
 intents = discord.Intents.default()
 intents.members = True
 
-# Initialize bot
-bot = commands.Bot(command_prefix="!", intents=intents)
+# Initialize bot with intents and without command prefix for slash commands
+bot = commands.Bot(intents=intents)
 
 # Load data
 user_data = {"counter": 0, "users": {}}
@@ -70,13 +69,11 @@ async def on_ready():
     """Handles the bot's readiness."""
     logger.info(f'NuName bot {bot.user} is ready.')
     try:
-        # Registering commands to a specific guild for testing
-        GUILD_ID = int(os.getenv('GUILD_ID'))  # Ensure you set this in your .env file
-        guild = discord.Object(id=GUILD_ID)
-        synced = await bot.tree.sync(guild=guild)
-        logger.info(f"Synced {len(synced)} commands to guild {GUILD_ID}")
+        # Optionally sync slash commands (not necessary with latest discord.py)
+        # await bot.slash_command('ping', description='Check if the bot is responsive').sync()
+        logger.info("Slash commands synced.")
     except Exception as e:
-        logger.error(f"Failed to sync commands: {e}")
+        logger.error(f"Failed to sync slash commands: {e}")
 
     if not bot.guilds:
         logger.warning("Bot is not connected to any guilds.")
@@ -147,35 +144,55 @@ async def on_member_update(before, after):
 
 # Slash Commands
 
-class MySlashCommands(commands.Cog):
-    """Cog for slash commands."""
-    def __init__(self, bot):
-        self.bot = bot
+@bot.slash_command(name="organize-nicknames", description="Organize member nicknames with a predefined format.")
+async def organize_nicknames(ctx: commands.Context):
+    try:
+        guild = ctx.guild
+        existing_numbers = []
 
-    @app_commands.command(name="ping", description="Check if the bot is responsive.")
-    async def ping(self, interaction: discord.Interaction):
-        """Ping command to check bot responsiveness."""
-        await interaction.response.send_message("Pong!")
+        for member in guild.members:
+            if member.nick:
+                try:
+                    number = int(member.nick.split(" | ")[0])
+                    existing_numbers.append(number)
+                except ValueError:
+                    logger.warning(f"Invalid nickname format for {member.name}")
 
-    @app_commands.command(name="set_naming_convention", description="Set a custom naming convention for new members.")
-    @app_commands.describe(format="The new naming convention format. Use {counter} for the counter and {username} for the username.")
-    async def set_naming_convention(self, interaction: discord.Interaction, format: str):
-        """Command to set a custom naming convention."""
-        try:
-            if "{counter}" in format and "{username}" in format:
-                naming_convention["format"] = format
-                save_json(NAMING_CONVENTION_PATH, naming_convention)
-                await interaction.response.send_message(f"Naming convention set to: {format}")
-            else:
-                await interaction.response.send_message("Invalid format. Make sure to include {counter} and {username} in the format.", ephemeral=True)
-        except Exception as e:
-            logger.error(f"Error in /set_naming_convention: {e}")
-            await interaction.response.send_message(f"An error occurred: {e}", ephemeral=True)
+        if existing_numbers:
+            user_data["counter"] = max(existing_numbers)
 
-bot.add_cog(MySlashCommands(bot))
+        save_json(USER_DATA_PATH, user_data)
+
+        for member in guild.members:
+            if not member.bot:
+                while user_data["counter"] + 1 in user_data["users"]:
+                    user_data["counter"] += 1
+
+                user_data["counter"] += 1
+                new_nickname = naming_convention["format"].format(counter=user_data["counter"], username=member.name)
+                user_data["users"][str(member.id)] = new_nickname
+                save_json(USER_DATA_PATH, user_data)
+
+                await member.edit(nick=new_nickname)
+                logger.info(f'Assigned nickname {new_nickname} to {member.name}')
+
+        await ctx.send("Nicknames organized successfully.")
+
+    except discord.Forbidden:
+        logger.error(f"Permission error: Cannot change nickname for {member.name}")
+        await ctx.send("Permission error: Unable to change nicknames due to missing permissions.")
+
+    except Exception as e:
+        logger.error(f"Error in organize_nicknames: {e}")
+        await ctx.send(f"An error occurred: {e}")
+
+@bot.slash_command(name="help", description="Show available commands.")
+async def help_command(ctx: commands.Context):
+    """Display available commands."""
+    command_list = "\n".join([f"/{command.name}: {command.description}" for command in bot.slash_commands])
+    await ctx.send(f"Available Commands:\n{command_list}")
 
 # Run the bot
-
 TOKEN = os.getenv('DISCORD_TOKEN')
 if TOKEN:
     bot.run(TOKEN)
