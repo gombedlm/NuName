@@ -47,6 +47,11 @@ def save_json(file_path, data):
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    try:
+        synced = await bot.tree.sync()  # Sync the slash commands with Discord
+        print(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        print(f"Error syncing commands: {e}")
 
 # Slash command to organize nicknames based on a numbering convention
 @bot.tree.command(name="organize_nicknames", description="Organize nicknames based on a numbering convention.")
