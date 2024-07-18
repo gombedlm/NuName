@@ -44,6 +44,13 @@ def save_json(file_path, data):
     except Exception as e:
         print(f"Error saving {file_path}: {e}")
 
+# Function to extract ID from nickname
+def extract_id(nickname):
+    match = re.match(r"(\d{3})", nickname)
+    if match:
+        return int(match.group(1))
+    return None
+
 # Event to print bot's login confirmation upon successful connection
 @bot.event
 async def on_ready():
@@ -54,62 +61,81 @@ async def on_ready():
     except Exception as e:
         print(f"Error syncing commands: {e}")
 
-# Slash command to organize nicknames based on a numbering convention
-@bot.tree.command(name="organize_nicknames", description="Organize nicknames based on a numbering convention.")
-async def organize_nicknames(interaction: discord.Interaction):
+    # Initial organization of nicknames when the bot starts
+    await organize_all_nicknames()
+
+# Function to organize all nicknames in the server
+async def organize_all_nicknames():
+    guild = bot.guilds[0]  # Assumes the bot is only in one guild; adjust if needed
     user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
     naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {display_name}"})
     naming_format = naming_convention["format"]
 
-    # Function to parse ID from nickname
-    def extract_id(nickname):
-        match = re.match(r"(\d{3})", nickname)
-        if match:
-            return int(match.group(1))
-        return None
-
-    # Ensure the bot has the required permissions
-    if not interaction.guild.me.guild_permissions.manage_nicknames:
-        await interaction.response.send_message("I do not have the `Manage Nicknames` permission.", ephemeral=True)
-        return
-
-    members = interaction.guild.members
-    current_ids = {extract_id(member.display_name) for member in members if extract_id(member.display_name) is not None}
+    current_ids = {extract_id(member.display_name) for member in guild.members if extract_id(member.display_name) is not None}
     max_id = max(current_ids, default=0)
     
-    # Filter and sort members
     members_with_convention = []
     members_without_convention = []
     
-    for member in members:
-        if extract_id(member.display_name) is not None:
+    for member in guild.members:
+        if member.bot:
+            # Rename bots to "BOT"
+            await member.edit(nick="BOT")
+        elif extract_id(member.display_name) is not None:
             members_with_convention.append(member)
         else:
             members_without_convention.append(member)
 
-    # Sort members without convention
     members_without_convention.sort(key=lambda m: m.display_name)
-
-    # Assign IDs to members without convention
-    available_ids = set(range(1, max_id + 2)) - current_ids
+    
+    available_ids = sorted(set(range(1, max_id + 2)) - current_ids)
     new_counter = max_id + 1
     user_data["counter"] = new_counter
 
     for member in members_without_convention:
-        new_id = min(available_ids, default=new_counter)
+        new_id = available_ids.pop(0) if available_ids else new_counter
         new_nickname = naming_format.format(counter=new_id, display_name=member.display_name)
         await member.edit(nick=new_nickname)
         user_data["users"][str(member.id)] = new_nickname
-        available_ids.discard(new_id)
         if not available_ids:
             new_counter += 1
-            available_ids.add(new_counter)
+            available_ids.append(new_counter)
         user_data["counter"] = new_counter
 
-    # Save updated user data
     save_json(USER_DATA_PATH, user_data)
 
-    await interaction.response.send_message("Nicknames have been organized and updated.")
+# Event when a member joins the server
+@bot.event
+async def on_member_join(member: discord.Member):
+    if member.bot:
+        # Rename bots to "BOT"
+        await member.edit(nick="BOT")
+    else:
+        user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
+        naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {display_name}"})
+        naming_format = naming_convention["format"]
+        
+        guild = member.guild
+        current_ids = {extract_id(m.display_name) for m in guild.members if extract_id(m.display_name) is not None}
+        available_ids = sorted(set(range(1, user_data["counter"] + 1)) - current_ids)
+        new_counter = max(current_ids, default=0) + 1
+
+        new_id = available_ids.pop(0) if available_ids else new_counter
+        new_nickname = naming_format.format(counter=new_id, display_name=member.display_name)
+        await member.edit(nick=new_nickname)
+
+        user_data["users"][str(member.id)] = new_nickname
+        user_data["counter"] = new_counter
+
+        save_json(USER_DATA_PATH, user_data)
+
+# Event when a member leaves the server
+@bot.event
+async def on_member_remove(member: discord.Member):
+    user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
+    if str(member.id) in user_data["users"]:
+        del user_data["users"][str(member.id)]
+        save_json(USER_DATA_PATH, user_data)
 
 # Slash command to display available commands
 @bot.tree.command(name="list_commands", description="Show available commands.")
