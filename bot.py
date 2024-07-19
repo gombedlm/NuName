@@ -149,6 +149,15 @@ async def list_commands(interaction: discord.Interaction):
     command_list = "\n".join([f"/{command.name}: {command.description}" for command in bot.tree.get_commands()])
     await interaction.response.send_message(f"Available Commands:\n{command_list}")
 
+# Slash command to manually organize all nicknames
+@bot.tree.command(name="organize_nicknames", description="Organize all nicknames in the server.")
+async def organize_nicknames(interaction: discord.Interaction):
+    if interaction.guild:
+        await organize_all_nicknames(interaction.guild)
+        await interaction.response.send_message("Nicknames have been organized.")
+    else:
+        await interaction.response.send_message("This command can only be used in a server.")
+
 # Run the bot with the Discord token from environment variables
 TOKEN = os.getenv('DISCORD_TOKEN')
 if TOKEN:
