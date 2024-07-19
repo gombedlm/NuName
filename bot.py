@@ -11,6 +11,7 @@ load_dotenv()
 # Define intents
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True  # Add this if needed
 
 # Initialize bot with a command prefix and intents
 bot = commands.Bot(command_prefix='/', intents=intents)
@@ -51,43 +52,48 @@ def extract_id(nickname):
         return int(match.group(1))
     return None
 
-# Event to print bot's login confirmation upon successful connection
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    print(f"Guilds: {[guild.name for guild in bot.guilds]}")  # Print guild names for debugging
+
     try:
         synced = await bot.tree.sync()  # Sync the slash commands with Discord
         print(f"Synced {len(synced)} command(s)")
     except Exception as e:
         print(f"Error syncing commands: {e}")
 
-    # Initial organization of nicknames when the bot starts
-    await organize_all_nicknames()
+    # Check if the bot is in any guilds
+    if bot.guilds:
+        guild = bot.guilds[0]
+        # Initial organization of nicknames when the bot starts
+        await organize_all_nicknames(guild)
+    else:
+        print("The bot is not currently in any guilds.")
 
 # Function to organize all nicknames in the server
-async def organize_all_nicknames():
-    guild = bot.guilds[0]  # Assumes the bot is only in one guild; adjust if needed
+async def organize_all_nicknames(guild):
     user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
     naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {display_name}"})
     naming_format = naming_convention["format"]
 
     current_ids = {extract_id(member.display_name) for member in guild.members if extract_id(member.display_name) is not None}
     max_id = max(current_ids, default=0)
-    
+
     members_with_convention = []
     members_without_convention = []
-    
+
     for member in guild.members:
         if member.bot:
             # Rename bots to "BOT"
-            await member.edit(nick="BOT")
+            await member.edit(nick="BOT | " + member.name)
         elif extract_id(member.display_name) is not None:
             members_with_convention.append(member)
         else:
             members_without_convention.append(member)
 
     members_without_convention.sort(key=lambda m: m.display_name)
-    
+
     available_ids = sorted(set(range(1, max_id + 2)) - current_ids)
     new_counter = max_id + 1
     user_data["counter"] = new_counter
@@ -109,7 +115,7 @@ async def organize_all_nicknames():
 async def on_member_join(member: discord.Member):
     if member.bot:
         # Rename bots to "BOT"
-        await member.edit(nick="BOT")
+        await member.edit(nick="BOT | " + member.name)
     else:
         user_data = load_json(USER_DATA_PATH, {"counter": 0, "users": {}})
         naming_convention = load_json(NAMING_CONVENTION_PATH, {"format": "{counter:03} | {display_name}"})
